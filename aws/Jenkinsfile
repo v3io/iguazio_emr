@@ -1,0 +1,38 @@
+pipeline {
+   agent any
+   environment {
+     PATH='/home/iguazio/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/home/iguazio/iguazio/install/ziggy'
+   }
+
+   stages {
+
+       stage('Upload artifacts to AWS') {
+              steps {
+               echo 'Get sources'
+               node('evgeny66') {
+                  git branch: 'develop', credentialsId: '242e5e6c-973f-4dd1-b292-b1c63c84d18e', url: 'git@github.com:iguazio/kubernetes.git'
+                  sh 'echo $PWD'
+                  echo 'checking if docker exists'
+                    sh 'docker -v || exit 1'
+
+                  echo 'upload to aws igz-emr-test bucket'
+                  sh './bin/upload_test_run.sh'
+                    }
+                }
+           }
+
+       stage('Run EMR cluster') {
+           steps {
+               echo 'Testing..'
+               sh 'chmod 755 ./bin/run_test_cluster.sh'
+               sh './bin/run_test_cluster.sh'
+           }
+       }
+       stage('Deploy') {
+           steps {
+               echo 'Deploying...'
+
+           }
+       }
+   }
+}
