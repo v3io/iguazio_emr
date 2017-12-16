@@ -21,7 +21,7 @@ class EMRuploader:
     def _prepare_jars_pkgs(self,spark_ver):
         """ prepare generic jars and zip for docker"""
         if spark_ver == 1:
-            download_path=os.path.join(self.CWD,"AWS/EMR/s3_bucket/emr-4.8.2")
+            download_path=os.path.join(self.CWD,"aws/s3_bucket/emr-4.8.2")
             pkg_list = { "v3io-hcfs.jar":"{0}/iguazio_mvn/io/iguaz/v3io/v3io-hcfs_2.10/{1}/v3io-hcfs_2.10-{2}.jar".format(self.ART_URL,self.version,self.version),
             "v3io-spark-object-dataframe.jar":"{0}/iguazio_mvn/io/iguaz/v3io/v3io-spark-object-dataframe_2.10/{1}/v3io-spark-object-dataframe_2.10-{2}.jar".format(self.ART_URL,self.version,self.version),
             "v3io-spark-streaming.jar":"{0}/iguazio_mvn/io/iguaz/v3io/v3io-spark-streaming_2.10/{1}/v3io-spark-streaming_2.10-{2}.jar".format(self.ART_URL,self.version,self.version),
@@ -30,7 +30,7 @@ class EMRuploader:
             "scala-library-2.10.5.jar":"{0}/jcenter-cache/org/scala-lang/scala-library/2.10.5/scala-library-2.10.5.jar".format(self.ART_URL)
                      }
         if spark_ver == 2:
-            download_path=os.path.join(self.CWD,"AWS/EMR/s3_bucket/emr-5.6.0/artifacts")
+            download_path=os.path.join(self.CWD,"aws/s3_bucket/emr-5.6.0/artifacts")
             pkg_list = { "v3io-hcfs.jar":"{0}/iguazio_mvn/io/iguaz/v3io/v3io-hcfs_2.11/{1}/v3io-hcfs_2.11-{2}.jar".format(self.ART_URL,self.version,self.version),
             "v3io-spark-object-dataframe.jar":"{0}/iguazio_mvn/io/iguaz/v3io/v3io-spark2-object-dataframe_2.11/{1}/v3io-spark2-object-dataframe_2.11-{2}.jar".format(self.ART_URL,self.version,self.version),
             "v3io-spark-streaming.jar":"{0}/iguazio_mvn/io/iguaz/v3io/v3io-spark2-streaming_2.11/{1}/v3io-spark2-streaming_2.11-{2}.jar".format(self.ART_URL,self.version,self.version),
@@ -86,10 +86,10 @@ class EMRuploader:
             try:
                 #ci.run_cli('curl -o {0} {1}'.format(dsf_file, file_name))
                 if spark_ver == 1:
-                    #download_path=os.path.join(self.CWD,"AWS/EMR/s3_bucket/emr-4.8.2")
+                    #download_path=os.path.join(self.CWD,"aws/s3_bucket/emr-4.8.2")
                     print "4.8.2 expired"
                 elif spark_ver == 2:
-                    download_path=os.path.join(self.CWD,"AWS/EMR/s3_bucket/emr-5.6.0/artifacts")
+                    download_path=os.path.join(self.CWD,"aws/s3_bucket/emr-5.6.0/artifacts")
 
                 if not os.path.exists(download_path):
                     os.makedirs(download_path)
@@ -169,7 +169,7 @@ class EMRuploader:
 
     def upload_emr_install(self):
         try:
-            cmd="aws s3 cp  --recursive ./AWS/EMR/emr_install/emr-5.6.0 s3://igz-emr-test/emr-5.6.0/emr-install/ --acl aws-exec-read"
+            cmd="aws s3 cp  --recursive ./aws/emr_install/emr-5.6.0 s3://igz-emr-test/emr-5.6.0/emr-install/ --acl aws-exec-read"
             os.system(cmd)
         except:
             print "[ERROR]: emr-install scripts upload failed"
@@ -179,7 +179,7 @@ class EMRuploader:
         generate tar archive for the customer from downloaded versions
         """
         # clean previous versions
-        cmd="""rm -rf ./docs AWS/EMR/s3_bucket/emr-5.6.0/*.{rpm,jar,zip,tgz,tar} ./*.tgz AWS/EMR/s3_bucket/emr-5.6.0/logs """
+        cmd="""rm -rf ./docs aws/s3_bucket/emr-5.6.0/*.{rpm,jar,zip,tgz,tar} ./*.tgz aws/s3_bucket/emr-5.6.0/logs """
         try:
             os.system(cmd)
         except Exception as err:
@@ -192,7 +192,7 @@ class EMRuploader:
         """
         file_name="emr_streaming.tar"
         dsf_file="{0}/iguazio-devops/EMR/{1}".format(self.ART_URL,file_name)
-        download_path=os.path.join(self.CWD,"AWS/EMR/s3_bucket/emr-5.6.0/artifacts")
+        download_path=os.path.join(self.CWD,"aws/s3_bucket/emr-5.6.0/artifacts")
         print "DEBUG downloading curl -u {0} -o {1}/{2} {3}".format(self.AUTH, download_path, file_name, dsf_file )
         os.system("curl -u {0} -o {1}/{2} {3}".format(self.AUTH, download_path, file_name, dsf_file ))
 

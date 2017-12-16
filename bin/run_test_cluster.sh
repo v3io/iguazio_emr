@@ -1,5 +1,5 @@
 #!/bin/bash
-cd ./AWS/EMR/emr_install/emr-5.6.0/
+cd ./aws/emr_install/emr-5.6.0/
 export PATH="$HOME/cli-ve/bin/:$PATH"
 if [ -f ./install_emr-5.6.0.sh ]; then 
 

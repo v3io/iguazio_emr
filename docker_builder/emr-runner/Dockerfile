@@ -14,7 +14,7 @@
 #docker run \
 #       --detach \
 #       --name start_emr_cluster \
-#       --volume $PWD/AWS/EMR/emr_install/emr-5.6.0:/emr_install \
+#       --volume $PWD/aws/emr_install/emr-5.6.0:/emr_install \
 #       --volume /home/iguazio/.aws:/home/iguazio/.aws \
 #       --volume /tmp:/tmp \
 #       artifactory.iguazeng.com:6555/emr-runner:latest /start_cluster.sh &
