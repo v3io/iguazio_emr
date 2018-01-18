@@ -83,7 +83,7 @@ function show_progress()
   #show progress and sleep
   for i in `seq 1 100`; do
       echo -ne "[INFO]: running            = (${i}%) done\r"
-      sleep 3
+      sleep 5 
   done
   echo -ne '\n'
 }
@@ -135,7 +135,7 @@ function main() {
         --name "$CLUSTER_NAME" \
         --release-label emr-${IGZ_EMR_VERSION} --use-default-roles \
         --ec2-attributes KeyName=$SSH_KEY_PAIR_NAME,SubnetId=$SUBNET_ID \
-        --applications Name=Hadoop Name=Spark Name=Zeppelin Name=Ganglia \
+        --applications Name=Hadoop Name=Spark Name=Zeppelin Name=Ganglia Name=Presto \
         --instance-count $EC2_INSTANCE_COUNT \
         --instance-type $EC2_INSTANCE_TYPE \
         --bootstrap-action \
@@ -148,7 +148,7 @@ function main() {
           --name "$CLUSTER_NAME" \
           --release-label emr-${IGZ_EMR_VERSION} --use-default-roles \
           --ec2-attributes KeyName=$SSH_KEY_PAIR_NAME,SubnetId=$SUBNET_ID \
-          --applications Name=Hadoop Name=Spark Name=Zeppelin Name=Ganglia \
+          --applications Name=Hadoop Name=Spark Name=Zeppelin Name=Ganglia Name=Presto \
           --instance-count $EC2_INSTANCE_COUNT \
           --instance-type $EC2_INSTANCE_TYPE \
           --bootstrap-action \

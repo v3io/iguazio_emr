@@ -91,6 +91,86 @@ cat << EOF > /tmp/daemon_config.json
 EOF
 
   sudo mv /tmp/daemon_config.json /home/iguazio/igz/daemon/config/daemon_config.json
+
+  cat << EOF > /tmp/dayman_config.json
+{
+  "num_workers": 2,
+  "max_channel_inactivity_period_seconds": 180,
+  "max_inflight_requests": 4096,
+  "cdi": {
+    "listen_addr": "0.0.0.0:1967"
+  },
+  "job_block_allocator": {
+    "mode": "per-worker",
+    "heaps": [
+      {
+        "kind": "mempool",
+        "block_size_bytes": 5120,
+        "num_blocks": 5000
+      },
+      {
+        "kind": "mempool",
+        "block_size_bytes": 20480,
+        "num_blocks": 2000
+      },
+      {
+        "kind": "mempool",
+        "block_size_bytes": 73728,
+        "num_blocks": 500
+      },
+      {
+        "kind": "mempool",
+        "block_size_bytes": 286720,
+        "num_blocks": 500
+      },
+      {
+        "kind": "mempool",
+        "block_size_bytes": 563200,
+        "num_blocks": 500
+      },
+      {
+        "kind": "mempool",
+        "block_size_bytes": 1126400,
+        "num_blocks": 500
+      },
+      {
+        "kind": "mempool",
+        "block_size_bytes": 2150400,
+        "num_blocks": 500
+      },
+      {
+        "kind": "boost",
+        "size_bytes": 536870912
+      }
+    ]
+  },
+  "logger": {
+    "mode": "log_server",
+    "severity": "debug",
+    "path": "/var/log/iguazio/dayman/log"
+  },
+  "paths": {
+    "fifo": "/tmp/iguazio/dayman/fifo",
+    "uds": "/tmp/iguazio/dayman/uds",
+    "pidfile": "/tmp/iguazio/dayman/pid/dayman.pid"
+  },
+  "cluster": {
+     "uris": [
+      {"uri": "tcp://$igz_data_node_ip:1234"}
+     ]
+  }
+}
+
+
+EOF
+
+  sudo mkdir -p  /home/iguazio/igz/dayman/config
+  sudo cp /tmp/dayman_config.json /home/iguazio/igz/dayman/config
+  sudo mv /tmp/dayman_config.json /home/iguazio/igz/daemon/config/dayman_config.json
+  sudo mkdir -p /var/log/iguazio/dayman 
+  sudo mkdir -p /tmp/iguazio/dayman/{pid,fifo,uds,log}
+  sudo chmod -R 777 /tmp/iguazio /var/log/iguazio
+  sudo mkdir -p /opt/iguazio/bigdata/conf
   sudo chown iguazio:iguazio -R  /home/iguazio/
   logger -T "install_daemon_config done"
 }
@@ -119,10 +199,24 @@ function install_packages()
 
 function running_iguazio_services()
 {
+  sudo cp  /home/iguazio/igz/bigdata/conf/v3io-dayman.conf /opt/iguazio/bigdata/conf/v3io.conf
+  sudo chmod 777 /opt/iguazio/bigdata/conf/v3io.conf
   # Run iguazio Data Platform services, including the v3io daemon
-  sudo su - iguazio -c "/home/iguazio/igz/engine/node_runner/bin/log_server --logdir=/var/log/iguazio --log_files_size=5368709120 &"
-  sudo su - iguazio -c "/home/iguazio/igz/clients/v3io/bin/v3io_daemon --config /home/iguazio/igz/daemon/config/daemon_config.json &"
+  sudo su - iguazio -c "/home/iguazio/igz/engine/node_runner/bin/log_server -s /var/log/iguazio/logserver.socket -v -d /var/log/iguazio -o 10000000 -l 10 "
+  sudo su - iguazio -c "/home/iguazio/igz/clients/v3io/bin/v3io_dayman --config /home/iguazio/igz/daemon/config/dayman_config.json &"
   logger -T "running_iguazio_services done"
+}
+
+function presto_installation()
+{
+  logger -T "[INFO]: presto installation"
+  sudo mkdir -p /usr/lib/presto/plugin/v3io
+  sudo mv /opt/igz/spark/lib/v3io-hcfs_2.11-1.5.0.jar /usr/lib/presto/plugin/v3io
+  sudo mv /opt/igz/spark/lib/v3io-presto_2.11-1.5.0.jar /usr/lib/presto/plugin/v3io
+  sudo chown presto:presto -R /usr/lib/presto/plugin/v3io
+  echo "connector.name=v3io" > /tmp/v3io.properties                      
+  sudo mv /tmp/v3io.properties /etc/presto/conf/catalog/ 
+  sudo chown presto:presto /etc/presto/conf/catalog/v3io.properties 
 }
 
 function main()
@@ -147,7 +241,8 @@ function main()
     running_iguazio_services
     sysctl_update
     change_ulimit
-    
+    presto_installation
+
     # Copy post-installation artifacts and change permissions
     sudo chmod 755 /opt/igz/spark/lib/*.sh
     . /opt/igz/spark/lib/post_install_${IGZ_EMR_VERSION}.sh &
@@ -157,3 +252,5 @@ function main()
 
 # Execute the script
 main $@
+
+
