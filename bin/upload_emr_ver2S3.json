@@ -1,0 +1,59 @@
+         {
+          "version": [
+            {
+              "1": [
+                {
+                  "packages": [
+                    "./AWS/EMR/s3_bucket/emr-4.8.2/download-4.8.2.sh"
+                  ]
+                },
+                {
+                  "s3_bucket": "s3://igz-emr-test/emr-4.8.2/"
+                }
+              ]
+            },
+            {
+              "2": [
+                {
+                  "packages": [
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/v3io-spark-object-dataframe.jar",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/v3io-hcfs.jar",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/v3io-spark-streaming.jar",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/scala-library-2.11.8.jar",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/v3io-hcfs_2.11-1.5.0.jar",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/v3io-presto_2.11-1.5.0.jar",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/v3io-py.zip",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/igz-bridge.rpm",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/igz-endo.rpm",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/igz-fio.rpm",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/igz-fuse.rpm",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/igz-log.rpm",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/igz-manof.rpm",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/igz-nginx.rpm",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/igz-node.rpm",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/igz-provision.rpm",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/igz-pyv3io.rpm",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/igz-v3io-daemon.rpm",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/igz-v3io-hcfs.rpm",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/download-5.6.0.sh",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/post_install_5.6.0.sh",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/v3io_start.sh",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/v3io_restart.sh",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/core.sh",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/spark_job_example.sh",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/emr_services_restart.sh",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/debug_activate.sh",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/get_logs.sh",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/first-last-booking.conf",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/run_nginx.sh",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/emr_streaming.tar",
+                    "./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/iperf3-3.1.3-1.fc24.x86_64.rpm"                    
+                  ]
+                },
+                {
+                  "s3_bucket": "s3://igz-emr-test/emr-5.6.0/artifacts/"
+                }
+              ]
+            }
+          ]
+        }
