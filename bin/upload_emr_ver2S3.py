@@ -4,35 +4,29 @@ import sys
 import json
 from argparse import ArgumentParser
 import logging 
+from shutil import copyfile
 
 def main():
+    """
+    uploading artifacts to the s3 bucket
 
+    """
     parser = ArgumentParser()
-    parser.add_argument("-t", "--tag", dest="myTag", help = """
-    
-    The script upload the last version to s3 buket and generate tar archive
-    with full version for the customer . \n
-    please define the iguazio tag name \n
-    ./bin/upload_emr_ver2S3.py --tag igz_0.12.6_b36_20170703185723 \n 
-    
-    """ )
-    parser.add_argument( "-f", "--config-file", dest="config_file", help="config file ",
-    default='./bin/upload_emr_ver2S3.json')
+    parser.add_argument("-t", "--tag", dest="myTag", help="""./bin/upload_emr_ver2S3.py \
+    --tag igz_1.5.0_b16_20180116095940 \n""")
+    parser.add_argument("-f", "--config-file", dest="config_file", help="config file ",
+                         default='./bin/upload_emr_ver2S3.json')
     args = parser.parse_args()
 
     if args.myTag:
-        print("[INFO]: Current tag {}".format(args.myTag))
-        action = EMRuploader(args.myTag,args.config_file)
-        action.clean_local_artifacts()
-        action.upload_http_bluster()
-        # action.upload()
-        # action.upload_emr_install()
+        print("Current tag {}".format(args.myTag))
+        action = EMRuploader(args.myTag, args.config_file)
+        action.upload_artifacts_to_s3()
     else:
-        help="""
-        please define the iguazio tag name \n
-        ./bin/upload_emr_ver2S3.py --tag igz_0.12.6_b36_20170703185723 
-        """
-        print(help)
+        print ("""
+        example how to run:
+        ./bin/upload_emr_ver2S3.py --tag igz_1.5.0_b16_20180116095940 --config-file ./bin/upload_emr_ver2S3.json
+        """)
         sys.exit(1)
 
 
@@ -44,91 +38,79 @@ class EMRuploader:
     def __init__(self, tag, config_file):
         self.version = tag
         self.spark_pkgs_json = config_file
-        with open(self.spark_pkgs_json,'r') as fr:
+        with open(self.spark_pkgs_json, 'r') as fr:
             self.packages = json.load(fr)
             self.s3_bucket = self.packages['s3_bucket']
             self.docker_registry = self.packages['docker_registry']
             self.AUTH = self.packages['artifactory_auth']
             self.ART_URL = self.packages['artifactory_url']
+            self.emr_version = self.packages['emr_version']
+            self.log = logging.getLogger(__name__)
+            self.out_hdlr = logging.StreamHandler(sys.stdout)
+            self.out_hdlr.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
+            self.out_hdlr.setLevel(logging.INFO)
+            self.log.addHandler(self.out_hdlr)
+            self.log.setLevel(logging.INFO)
+
             self.CWD = os.getcwd()
         fr.close()
 
-    def _prepare_pkgs(self):
+    def _download_pkgs(self):
         """ 
             download artifacts from artifactory 
         """
         for package in self.packages['packages']:
             if 'ARTIFACTORY' in package['src_pkg'].encode("ascii"):
-                url = package['src_pkg'].encode("ascii").replace('ARTIFACTORY',self.ART_URL)
-                cmd = url.replace('VERSION',self.version)
 
-                print("[INFO]: downloading {0} to {1}".format(dsf_file,file_name))
+                url = package['src_pkg'].encode("ascii").replace('ARTIFACTORY', self.ART_URL)
+                src_pkg = url.replace('VERSION', self.version)
+                dst_pkg = package['dst_pkg'].encode("ascii")
+
                 try:
-                    #ci.run_cli('curl -o {0} {1}'.format(dsf_file, file_name))
-                    os.system("curl -u {0} -o {1}/{2} {3}".format(self.AUTH, download_path,  file_name, dsf_file ))
+                    self.log.info("curl -u {0} -o {1} {2}".format(self.AUTH, dst_pkg, src_pkg))
+                    os.system("curl -u {0} -o {1} {2}".format(self.AUTH, dst_pkg, src_pkg))
                 except:
-                    print("[ERROR] the file {0} is not found".format(dsf_file))
-
-            download_path=os.path.join(self.CWD,"AWS/EMR/s3_bucket/emr-5.6.0/artifacts")
-
-            if not os.path.exists(download_path):
-                os.makedirs(download_path)
-
+                    self.log.error("{0} file downloading is failed".format(src_pkg))
+                    sys.exit(1)
             else:
-                print("Current version {} is not supported".format(spark_ver))
+                self._scripts_copy(package['src_pkg'].encode("ascii"), package['dst_pkg'].encode("ascii"))
 
-            os.system("curl -u {0} -o {1}/{2} {3}".format(self.AUTH, download_path, file_name, dsf_file ))
- 
+    def _scripts_copy(self, src, dst):
 
-    def upload(self):
         try:
-            f_json= open(self.spark_pkgs_json,'r')
-            conf=json.load(f_json)
+            self.log.info('Copy file {0} to {1}'.format(src, dst))
+            copyfile(src, dst)
         except:
-            print('[ERROR]: failed load json file')
-            sys.exit()
-        finally:
-            f_json.close()
+            self.log.error('file {0} copy filed to destination {1}'.format(src, dst))
+            sys.exit(1)
 
-        self._prepare_pkgs(spark_ver)
-
-        for pkg_list in packages.values():
-            for pkg in pkg_list:
-                cmd = "aws s3 cp {0} {1} --acl aws-exec-read".format(pkg,buckets.values()[0])
-                try:
-                    os.system(cmd)
-                except:
-                    print "ERROR: {0} is false".format(cmd)
-
-    def upload_emr_install(self):
-        try:
-            cmd="aws s3 cp  --recursive ./AWS/EMR/emr_install/emr-5.6.0 s3://igz-emr-test/emr-5.6.0/emr-install/ --acl aws-exec-read"
-            os.system(cmd)
-        except:
-            print "[ERROR]: emr-install scripts upload failed"
-
-    def clean_local_artifacts(self):
+    def _clean_local_artifacts(self):
         """
         generate tar archive for the customer from downloaded versions
         """
         print('running clean_local_artifacts')
         # clean previous versions
-        cmd="""rm -rf AWS/EMR/s3_bucket/emr-5.6.0/*.{rpm,jar,zip,tgz,tar} ./*.tgz AWS/EMR/s3_bucket/emr-5.6.0/logs """
+        cmd = """rm -rf AWS/EMR/s3_bucket/{0}/artifacts && mkdir -p AWS/EMR/s3_bucket/{0}/artifacts """.format(self.emr_version)
         try:
             os.system(cmd)
         except Exception as err:
             print err
             pass
 
-    def upload_http_bluster(self):
-        """
-        upload http_bluster
-        """
-        file_name="emr_streaming.tar"
-        dsf_file="{0}/iguazio-devops/EMR/{1}".format(self.ART_URL,file_name)
-        download_path=os.path.join(self.CWD,"AWS/EMR/s3_bucket/emr-5.6.0/artifacts")
-        print "DEBUG downloading curl -u {0} -o {1}/{2} {3}".format(self.AUTH, download_path, file_name, dsf_file )
-        os.system("curl -u {0} -o {1}/{2} {3}".format(self.AUTH, download_path, file_name, dsf_file ))
+    def upload_artifacts_to_s3(self):
+
+        self._clean_local_artifacts()
+        self._download_pkgs()
+
+        copy_scripts = "aws s3 cp  --recursive ./AWS/EMR/emr_install/{0} {1}/{0}/emr-install/ --acl aws-exec-read".format(self.emr_version,self.s3_bucket)
+        copy_artifacts = "aws s3 cp  --recursive ./AWS/EMR/s3_bucket/{0}/artifacts {1}/{0}/artifacts/ --acl aws-exec-read".format(self.emr_version, self.s3_bucket)
+        for cmd in copy_scripts, copy_artifacts:
+            try:
+                self.log.info(cmd)
+                os.system(cmd)
+            except:
+                self.log.error("emr-install scripts upload is failed")
+                sys.exit(1)
 
 if __name__=='__main__':
     main()

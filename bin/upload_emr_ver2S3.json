@@ -4,15 +4,14 @@
   "artifactory_auth":"auto:iguazio1",
   "docker_registry":"artifactory.iguazeng.com:6555",
   "s3_bucket":"s3://igz-emr-test",
-
-
+  "emr_version":"emr-5.6.0",
   "packages":[  
     {
       "src_pkg":"ARTIFACTORY/iguazio_mvn/io/iguaz/v3io/v3io-spark2-object-dataframe_2.11/VERSION/v3io-spark2-object-dataframe_2.11-VERSION.jar",
       "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/v3io-spark-object-dataframe.jar"
     },
     {
-      "src_pkg":"ARTIFACTORY/iguazio_mvn/io/iguaz/v3io/v3io-hcfs_2.11/{self.version}/v3io-hcfs_2.11-{self.version}.jar",
+      "src_pkg":"ARTIFACTORY/iguazio_mvn/io/iguaz/v3io/v3io-hcfs_2.11/VERSION/v3io-hcfs_2.11-VERSION.jar",
       "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/v3io-hcfs.jar"
     },
     {
@@ -91,57 +90,61 @@
       "src_pkg":"ARTIFACTORY/iguazio_amazon/VERSION/igz-v3io-hcfs.rpm",
       "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/igz-v3io-hcfs.rpm"
     },
-    { 
-      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/download-5.6.0.sh",
-      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/download-5.6.0.sh"
-    },
-    { 
-      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/post_install_5.6.0.sh",
-      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/post_install_5.6.0.sh"
-    },
-    {
-      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/v3io_start.sh",
-      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/v3io_start.sh"
-    },
-    { 
-      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/v3io_restart.sh",
-      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/v3io_restart.sh"
-    },
-    { 
-      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/v3io_restart.sh",
-      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/core.sh"
-    },
-    { 
-      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/spark_job_example.sh",
-      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/spark_job_example.sh"
-    },
-    { 
-      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/emr_services_restart.sh",
-      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/emr_services_restart.sh"
-    },
-    { 
-      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/debug_activate.sh",
-      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/debug_activate.sh"
-    },
-    { 
-      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/get_logs.sh",
-      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/get_logs.sh"
-    },
-    { 
-      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/first-last-booking.conf",
-      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/first-last-booking.conf"
-    }, 
-    {
-      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/run_nginx.sh",
-      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/run_nginx.sh"
-    }, 
-    {
-      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/emr_streaming.tar",
-      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/emr_streaming.tar"
-    }, 
     {
       "src_pkg":"ARTIFACTORY/iguazio-devops/iperf3-3.1.3-1.fc24.x86_64.rpm",
       "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/iperf3-3.1.3-1.fc24.x86_64.rpm"
-    }  
+    },
+    {
+      "src_pkg":"ARTIFACTORY/iguazio-devops/EMR/emr_streaming.tar",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/emr_streaming.tar"
+    },
+    {
+      "src_pkg":"ARTIFACTORY/iguazio-devops/EMR/spark2-apps-v12.6.jar",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/spark2-apps-v12.6.jar"
+    },
+    { 
+      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/download-5.6.0.sh",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/download-5.6.0.sh"
+    },
+    { 
+      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/post_install_5.6.0.sh",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/post_install_5.6.0.sh"
+    },
+    {
+      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/v3io_start.sh",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/v3io_start.sh"
+    },
+    { 
+      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/v3io_restart.sh",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/v3io_restart.sh"
+    },
+    { 
+      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/core.sh",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/core.sh"
+    },
+    { 
+      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/spark_job_example.sh",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/spark_job_example.sh"
+    },
+    { 
+      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/emr_services_restart.sh",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/emr_services_restart.sh"
+    },
+    { 
+      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/debug_activate.sh",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/debug_activate.sh"
+    },
+    { 
+      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/get_logs.sh",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/get_logs.sh"
+    },
+    { 
+      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/first-last-booking.conf",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/first-last-booking.conf"
+    }, 
+    {
+      "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/run_nginx.sh",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/run_nginx.sh"
+    }
   ]
 }
