@@ -45,15 +45,15 @@ class EMRuploader:
             self.AUTH = self.packages['artifactory_auth']
             self.ART_URL = self.packages['artifactory_url']
             self.emr_version = self.packages['emr_version']
-            self.log = logging.getLogger(__name__)
-            self.out_hdlr = logging.StreamHandler(sys.stdout)
-            self.out_hdlr.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
-            self.out_hdlr.setLevel(logging.INFO)
-            self.log.addHandler(self.out_hdlr)
-            self.log.setLevel(logging.INFO)
-
-            self.CWD = os.getcwd()
         fr.close()
+
+        self.log = logging.getLogger(__name__)
+        self.out_hdlr = logging.StreamHandler(sys.stdout)
+        self.out_hdlr.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
+        self.out_hdlr.setLevel(logging.INFO)
+        self.log.addHandler(self.out_hdlr)
+        self.log.setLevel(logging.INFO)
+
 
     def _download_pkgs(self):
         """ 
@@ -76,7 +76,11 @@ class EMRuploader:
                 self._scripts_copy(package['src_pkg'].encode("ascii"), package['dst_pkg'].encode("ascii"))
 
     def _scripts_copy(self, src, dst):
-
+        """
+        copy local scripts from repository into artifacts directory
+        :param src: source file path
+        :param dst: destination file path
+        """
         try:
             self.log.info('Copy file {0} to {1}'.format(src, dst))
             copyfile(src, dst)
@@ -86,23 +90,24 @@ class EMRuploader:
 
     def _clean_local_artifacts(self):
         """
-        generate tar archive for the customer from downloaded versions
+        clean previous artifact's version directory before starting
         """
-        print('running clean_local_artifacts')
-        # clean previous versions
+        self.log.info('running clean_local_artifacts')
         cmd = """rm -rf AWS/EMR/s3_bucket/{0}/artifacts && mkdir -p AWS/EMR/s3_bucket/{0}/artifacts """.format(self.emr_version)
         try:
             os.system(cmd)
         except Exception as err:
-            print err
+            self.log.error(err)
             pass
 
     def upload_artifacts_to_s3(self):
-
+        """
+        downloading artifacts from artifactory , copy local scripts from repository and uploading it into S3 bucket
+        """
         self._clean_local_artifacts()
         self._download_pkgs()
 
-        copy_scripts = "aws s3 cp  --recursive ./AWS/EMR/emr_install/{0} {1}/{0}/emr-install/ --acl aws-exec-read".format(self.emr_version,self.s3_bucket)
+        copy_scripts = "aws s3 cp  --recursive ./AWS/EMR/emr_install/{0} {1}/{0}/emr-install/ --acl aws-exec-read".format(self.emr_version, self.s3_bucket)
         copy_artifacts = "aws s3 cp  --recursive ./AWS/EMR/s3_bucket/{0}/artifacts {1}/{0}/artifacts/ --acl aws-exec-read".format(self.emr_version, self.s3_bucket)
         for cmd in copy_scripts, copy_artifacts:
             try:
@@ -112,5 +117,8 @@ class EMRuploader:
                 self.log.error("emr-install scripts upload is failed")
                 sys.exit(1)
 
-if __name__=='__main__':
+if __name__ == '__main__':
     main()
+
+
+# TODO: Add function copy artifacts if it exist in  s3://backup/defined_TAG_VERSION to s3://defined_customer_bucket
