@@ -147,7 +147,7 @@ EOF
   "logger": {
     "mode": "log_server",
     "severity": "debug",
-    "path": "/var/log/iguazio/dayman/log"
+    "path": "/var/log/iguazio/"
   },
   "paths": {
     "fifo": "/tmp/iguazio/dayman/fifo",
@@ -167,7 +167,7 @@ EOF
   sudo mkdir -p  /home/iguazio/igz/dayman/config
   sudo cp /tmp/dayman_config.json /home/iguazio/igz/dayman/config
   sudo mv /tmp/dayman_config.json /home/iguazio/igz/daemon/config/dayman_config.json
-  sudo mkdir -p /var/log/iguazio/dayman 
+  sudo mkdir -p /var/log/iguazio/
   sudo mkdir -p /tmp/iguazio/dayman/{pid,fifo,uds,log}
   sudo chmod -R 777 /tmp/iguazio /var/log/iguazio
   sudo mkdir -p /opt/iguazio/bigdata/conf
@@ -222,6 +222,8 @@ function presto_installation()
 function main()
 {
     local igz_data_node_ip=$1
+    echo "$igz_data_node_ip" > /tmp/data_node_ip
+    sudo cp "$igz_data_node_ip" /etc/data_node_ip
     #TODO Make it secure ... .
     if [ -z $igz_data_node_ip ]; then
         logger -T "[ERROR]: The iguazio data-node argument (\$1) is missing."
