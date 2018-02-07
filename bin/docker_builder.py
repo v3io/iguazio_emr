@@ -116,19 +116,6 @@ class DockerBuilder:
         except:
             print("[ERROR] the file {0} is not found".format(dsf_file))
 
-    def _create_emr_runner_docker(self):
-        "create emr runner docker "
-        docker_name = 'artifactory.iguazeng.com:6555/{0}/emr-runner:latest'.format(self.version)
-        cmd = '''docker build -t {0} {1}/docker_builder/emr-runner '''.format(docker_name, self.CWD )
-        create_tag =  "emr-runner"
-
-        try:
-            print("[INFO]: run docker build: {}".format(cmd))
-            os.system(cmd)
-        except:
-            print("[ERROR]: can't create the docker ")
-
-        self._create_tag(create_tag)
 
     def _push_docker_image(self,repo_name,docker_name):
         """
@@ -154,10 +141,8 @@ class DockerBuilder:
         self._create_spark_docker_image()
         self._create_zeppelin_docker()
         self._create_zeppelin_docker_image()
-        self._create_emr_runner_docker()
         self._push_docker_image("artifactory.iguazeng.com:6555","spark2-standalone")
         self._push_docker_image("artifactory.iguazeng.com:6555","zeppelin")
-        self._push_docker_image("artifactory.iguazeng.com:6555","emr-runner")
 
     def _docker_cleaner(self):
         """delete all dockers with images from the host"""

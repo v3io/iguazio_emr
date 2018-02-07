@@ -23,10 +23,6 @@
       "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/scala-library-2.11.8.jar"
     }, 
     {
-      "src_pkg":"ARTIFACTORY/iguazio_devops/install_distribution/presto/v3io-hcfs_2.11-1.5.0.jar",
-      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/v3io-hcfs_2.11-1.5.0.jar"
-    },
-    {
       "src_pkg":"ARTIFACTORY/iguazio_devops/install_distribution/presto/v3io-presto_2.11-1.5.0.jar",
       "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/v3io-presto_2.11-1.5.0.jar"
     }, 
