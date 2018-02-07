@@ -141,6 +141,10 @@
     {
       "src_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/run_nginx.sh",
       "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/run_nginx.sh"
+    },
+    {
+      "src_pkg":"/ARTIFACTORY/iguazio_mvn_write/io/iguaz/v3io/v3io-presto_2.11/VERSION/v3io-presto_2.11-igz_1.5.x_b118_20180207131102.jar",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.6.0/artifacts/v3io-presto_2.11-1.5.0.jar"
     }
   ]
 }
