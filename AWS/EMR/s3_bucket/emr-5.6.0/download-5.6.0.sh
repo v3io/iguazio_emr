@@ -213,11 +213,18 @@ function presto_installation()
   sudo mkdir -p /usr/lib/presto/plugin/v3io
   sudo mv /opt/igz/spark/lib/v3io-presto_2.11-1.5.0.jar /usr/lib/presto/plugin/v3io/
   sudo ln -s  /opt/igz/spark/lib/*.jar /usr/lib/presto/plugin/v3io/
-  echo "connector.name=v3io" > /tmp/v3io.properties
-  sudo cp /tmp/v3io.properties /etc/presto/conf/catalog/
-  sudo mv /tmp/v3io.properties /etc/presto/conf/catalog/ 
+  sudo mkdir -p /etc/presto/conf/catalog
+  sudo echo "connector.name=v3io" > /etc/presto/conf/catalog/v3io.properties
   sudo chown presto:presto -R /usr/lib/presto/plugin/v3io
   sudo chmod 644 /etc/presto/conf/catalog/v3io.properties
+}
+
+function  prepare_inventory_list()
+{
+  sudo echo "[emr_nodes]" > /etc/inventory
+  sudo echo "$(hostname -i)" >> /etc/inventory
+  yarn node -list | awk '/ip/ { print $1 } ' | awk ' BEGIN {FS="."} { print $1 } ' | awk ' BEGIN {FS="-"}{ print $2"."$3"."$4"."$5} ' > /tmp/slaves
+  sudo cat /tmp/slaves >> /etc/inventory
 }
 
 function main()
@@ -245,7 +252,8 @@ function main()
     sysctl_update
     change_ulimit
     presto_installation
-
+    prepare_inventory_list
+ 
     # Copy post-installation artifacts and change permissions
     sudo chmod 755 /opt/igz/spark/lib/*.sh
     . /opt/igz/spark/lib/post_install_${IGZ_EMR_VERSION}.sh &
