@@ -215,6 +215,7 @@ function presto_installation()
   sudo ln -s  /opt/igz/spark/lib/*.jar /usr/lib/presto/plugin/v3io/
   echo "connector.name=v3io" > /tmp/v3io.properties
   sudo cp /tmp/v3io.properties /etc/presto/conf/catalog/
+  sudo mv /tmp/v3io.properties /etc/presto/conf/catalog/ 
   sudo chown presto:presto -R /usr/lib/presto/plugin/v3io
   sudo chmod 644 /etc/presto/conf/catalog/v3io.properties
 }
