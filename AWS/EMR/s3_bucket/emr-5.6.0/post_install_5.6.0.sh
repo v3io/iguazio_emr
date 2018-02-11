@@ -43,4 +43,5 @@ fi
 
 # prepare inventory list
 prepare_inventory_list
+sudo pip install ansible==2.1.0.0
 
