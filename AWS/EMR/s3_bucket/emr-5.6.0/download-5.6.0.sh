@@ -209,25 +209,17 @@ function running_iguazio_services()
 
 function presto_installation()
 {
+  v3io_properties="/tmp/v3io.properties"
   logger -T "[INFO]: presto installation"
   sudo mkdir -p /usr/lib/presto/plugin/v3io
   sudo mv /opt/igz/spark/lib/v3io-presto_2.11-1.5.0.jar /usr/lib/presto/plugin/v3io/
   sudo ln -s  /opt/igz/spark/lib/*.jar /usr/lib/presto/plugin/v3io/
-  sudo mkdir -p /etc/presto/conf.dist/catalog
-  sudo echo "connector.name=v3io" > /etc/presto/conf.dist/catalog/v3io.properties
+  sudo mkdir -p /etc/presto/conf/catalog
+  sudo echo "connector.name=v3io" > $v3io_properties
   sudo chown presto:presto -R /usr/lib/presto/plugin/v3io
-  sudo chmod 644 /etc/presto/conf.dist/catalog/v3io.properties
+  sudo mv $v3io_properties  /etc/presto/conf/catalog/v3io.properties
 }
 
-function prepare_inventory_list()
-{
-  inventory="/home/iguazio/inventory"
-  sudo echo "[emr_nodes]" > $inventory
-  sudo echo "$(hostname -i)" >> $inventory
-  sudo chmod 666 $inventory
-  sudo chown iguazio:iguazio $inventory
-  yarn node -list | awk '/ip/ { print $1 } ' | awk ' BEGIN {FS="."} { print $1 } ' | awk ' BEGIN {FS="-"}{ print $2"."$3"."$4"."$5} ' > $inventory 
-}
 
 function main()
 {
@@ -254,7 +246,6 @@ function main()
     sysctl_update
     change_ulimit
     presto_installation
-    prepare_inventory_list
  
     # Copy post-installation artifacts and change permissions
     sudo chmod 755 /opt/igz/spark/lib/*.sh
