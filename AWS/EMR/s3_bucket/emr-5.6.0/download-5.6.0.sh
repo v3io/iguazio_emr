@@ -213,18 +213,20 @@ function presto_installation()
   sudo mkdir -p /usr/lib/presto/plugin/v3io
   sudo mv /opt/igz/spark/lib/v3io-presto_2.11-1.5.0.jar /usr/lib/presto/plugin/v3io/
   sudo ln -s  /opt/igz/spark/lib/*.jar /usr/lib/presto/plugin/v3io/
-  sudo mkdir -p /etc/presto/conf/catalog
-  sudo echo "connector.name=v3io" > /etc/presto/conf/catalog/v3io.properties
+  sudo mkdir -p /etc/presto/conf.dist/catalog
+  sudo echo "connector.name=v3io" > /etc/presto/conf.dist/catalog/v3io.properties
   sudo chown presto:presto -R /usr/lib/presto/plugin/v3io
-  sudo chmod 644 /etc/presto/conf/catalog/v3io.properties
+  sudo chmod 644 /etc/presto/conf.dist/catalog/v3io.properties
 }
 
-function  prepare_inventory_list()
+function prepare_inventory_list()
 {
-  sudo echo "[emr_nodes]" > /etc/inventory
-  sudo echo "$(hostname -i)" >> /etc/inventory
-  yarn node -list | awk '/ip/ { print $1 } ' | awk ' BEGIN {FS="."} { print $1 } ' | awk ' BEGIN {FS="-"}{ print $2"."$3"."$4"."$5} ' > /tmp/slaves
-  sudo cat /tmp/slaves >> /etc/inventory
+  inventory="/home/iguazio/inventory"
+  sudo echo "[emr_nodes]" > $inventory
+  sudo echo "$(hostname -i)" >> $inventory
+  sudo chmod 666 $inventory
+  sudo chown iguazio:iguazio $inventory
+  yarn node -list | awk '/ip/ { print $1 } ' | awk ' BEGIN {FS="."} { print $1 } ' | awk ' BEGIN {FS="-"}{ print $2"."$3"."$4"."$5} ' > $inventory 
 }
 
 function main()
