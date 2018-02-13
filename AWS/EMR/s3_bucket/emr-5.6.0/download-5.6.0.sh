@@ -150,9 +150,9 @@ EOF
     "path": "/var/log/iguazio/dayman/log"
   },
   "paths": {
-    "fifo": "/tmp/iguazio/dayman/fifo",
-    "uds": "/tmp/iguazio/dayman/uds",
-    "pidfile": "/tmp/iguazio/dayman/pid/dayman.pid"
+    "fifo": "/var/opt/iguazio/dayman/fifo",
+    "uds": "/var/opt/iguazio/dayman/uds",
+    "pidfile": "/var/opt/iguazio/dayman/pid/dayman.pid"
   },
   "cluster": {
      "uris": [
@@ -164,12 +164,12 @@ EOF
 
 EOF
 
-  sudo mkdir -p  /home/iguazio/igz/dayman/config
+  sudo mkdir -p /home/iguazio/igz/dayman/config
   sudo cp /tmp/dayman_config.json /home/iguazio/igz/dayman/config
   sudo mv /tmp/dayman_config.json /home/iguazio/igz/daemon/config/dayman_config.json
   sudo mkdir -p /var/log/iguazio/dayman 
-  sudo mkdir -p /tmp/iguazio/dayman/{pid,fifo,uds,log}
-  sudo chmod -R 777 /tmp/iguazio /var/log/iguazio
+  sudo mkdir -p /var/opt/iguazio/dayman/{pid,fifo,uds,log}
+  sudo chmod -R 777 /var/opt/iguazio /var/log/iguazio
   sudo mkdir -p /opt/iguazio/bigdata/conf
   sudo chown iguazio:iguazio -R  /home/iguazio/
   logger -T "install_daemon_config done"
