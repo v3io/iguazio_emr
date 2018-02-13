@@ -6,15 +6,11 @@ nginx_tmpl=/home/iguazio/igz/clients/nginx/conf/nginx_multi_workers.conf
 temp_file=/tmp/nginx.conf
 conf_file=/home/iguazio/igz/clients/nginx/conf/nginx.conf
 
-NODE_IP=`cat /home/iguazio/igz/daemon/config/daemon_config.json | awk ' /cluster_endpoint/ { print $2 }' | awk -F':' 'BEGIN{OFS="=";} {print $2 }' | sed 's/\/\///g'`
-
+NODE_IP=`cat /etc/data_node_ip` 
 
 echo "load_module /home/iguazio/igz/clients/nginx/lib/ngx_http_v3io_module.so;" > $temp_file
-cat $nginx_tmpl | grep -v load_module | awk '/v3io_user_name/ { print "v3io_user_name       iguazio;" } ' >> $temp_file
-cat  $temp_file | sed "s/127.0.0.1/$NODE_IP/g" > $conf_file
-
-#PATCH CHANGE SSL PORT
-sed -i "s/8443/8445/g" $conf_file
+cat $nginx_tmpl | grep -v load_module >> $temp_file
+cat $temp_file | sed "s/127.0.0.1/$NODE_IP/g" | sed 's/8443/8445/g' > $conf_file
 
 #if limits.conf has default parameters use this limit 
 ulimit -n 94000

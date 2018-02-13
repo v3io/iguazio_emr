@@ -147,7 +147,7 @@ EOF
   "logger": {
     "mode": "log_server",
     "severity": "debug",
-    "path": "/var/log/iguazio/dayman/log"
+    "path": "/var/log/iguazio/"
   },
   "paths": {
     "fifo": "/var/opt/iguazio/dayman/fifo",
@@ -167,9 +167,11 @@ EOF
   sudo mkdir -p /home/iguazio/igz/dayman/config
   sudo cp /tmp/dayman_config.json /home/iguazio/igz/dayman/config
   sudo mv /tmp/dayman_config.json /home/iguazio/igz/daemon/config/dayman_config.json
+
   sudo mkdir -p /var/log/iguazio/dayman 
   sudo mkdir -p /var/opt/iguazio/dayman/{pid,fifo,uds,log}
   sudo chmod -R 777 /var/opt/iguazio /var/log/iguazio
+
   sudo mkdir -p /opt/iguazio/bigdata/conf
   sudo chown iguazio:iguazio -R  /home/iguazio/
   logger -T "install_daemon_config done"
@@ -211,17 +213,19 @@ function presto_installation()
 {
   logger -T "[INFO]: presto installation"
   sudo mkdir -p /usr/lib/presto/plugin/v3io
-  sudo mv /opt/igz/spark/lib/v3io-hcfs_2.11-1.5.0.jar /usr/lib/presto/plugin/v3io
-  sudo mv /opt/igz/spark/lib/v3io-presto_2.11-1.5.0.jar /usr/lib/presto/plugin/v3io
+  sudo mv /opt/igz/spark/lib/v3io-presto_2.11-1.5.0.jar /usr/lib/presto/plugin/v3io/
+  sudo ln -s  /opt/igz/spark/lib/*.jar /usr/lib/presto/plugin/v3io/
+  echo "connector.name=v3io" > /tmp/v3io.properties
+  sudo cp /tmp/v3io.properties /etc/presto/conf/catalog/
   sudo chown presto:presto -R /usr/lib/presto/plugin/v3io
-  echo "connector.name=v3io" > /tmp/v3io.properties                      
-  sudo mv /tmp/v3io.properties /etc/presto/conf/catalog/ 
-  sudo chown presto:presto /etc/presto/conf/catalog/v3io.properties 
+  sudo chmod 644 /etc/presto/conf/catalog/v3io.properties
 }
 
 function main()
 {
     local igz_data_node_ip=$1
+    echo "$igz_data_node_ip" > /tmp/data_node_ip
+    sudo cp "$igz_data_node_ip" /etc/data_node_ip
     #TODO Make it secure ... .
     if [ -z $igz_data_node_ip ]; then
         logger -T "[ERROR]: The iguazio data-node argument (\$1) is missing."
