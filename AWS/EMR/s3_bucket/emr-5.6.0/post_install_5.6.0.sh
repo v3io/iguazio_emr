@@ -1,5 +1,15 @@
 #!/bin/bash
 
+function prepare_inventory_list()
+{
+  logger -T "[INFO]: prepare inventory file"
+  inventory="/tmp/inventory"
+  echo "[emr_nodes]" > $inventory
+  echo "$(hostname -i)" >> $inventory
+  yarn node -list | awk '/ip/ { print $1 } ' | awk ' BEGIN {FS="."} { print $1 } ' | awk ' BEGIN {FS="-"}{ print $2"."$3"."$4"."$5} ' >> $inventory
+  sudo mv $inventory /home/iguazio
+  sudo chown iguazio:iguazio /home/iguazio/inventory
+}
 
 #add nginx
 function add_nginx()
@@ -30,3 +40,8 @@ if [ -f /etc/init/zeppelin.conf ]; then
 	sudo initctl restart zeppelin
 	add_nginx
 fi
+
+# prepare inventory list
+prepare_inventory_list
+sudo pip install ansible==2.1.0.0
+

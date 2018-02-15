@@ -36,7 +36,6 @@ class EMRuploader:
     """
 
     def __init__(self, tag, config_file):
-        self.version = tag
         self.spark_pkgs_json = config_file
         with open(self.spark_pkgs_json, 'r') as fr:
             self.packages = json.load(fr)
@@ -47,6 +46,7 @@ class EMRuploader:
             self.emr_version = self.packages['emr_version']
         fr.close()
 
+        self.version = self._artifactory_get_latest_success(tag)
         self.log = logging.getLogger(__name__)
         self.out_hdlr = logging.StreamHandler(sys.stdout)
         self.out_hdlr.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
@@ -120,6 +120,17 @@ class EMRuploader:
             except:
                 self.log.error("emr-install scripts upload is failed")
                 sys.exit(1)
+
+    def _artifactory_get_latest_success(self, myTag):
+        """
+        convert the lable to tag
+        """
+        myTag = myTag.strip()
+        if 'latest' in myTag.lower() or 'stable' in myTag.lower():
+            cmd = "aws s3 cp  s3://iguazio-versions/{0}/{0} -".format(myTag)
+            version = os.popen(cmd).read()
+            return version.replace('\n', '')
+        return myTag
 
 if __name__ == '__main__':
     main()
