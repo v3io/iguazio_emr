@@ -103,6 +103,12 @@ class EMRuploader:
         except Exception as err:
             self.log.error(err)
             pass
+            
+    def write_current_version_tag(self):
+        filename="./AWS/EMR/s3_bucket/{0}/artifacts/version.txt".format(self.emr_version)
+        with open(filename,'w') as fw:
+            fw.write(self.version)
+            fw.close()
 
     def upload_artifacts_to_s3(self):
         """
@@ -110,10 +116,13 @@ class EMRuploader:
         """
         self._clean_local_artifacts()
         self._download_pkgs()
+        self.write_current_version_tag()
 
         copy_scripts = "aws s3 cp  --recursive ./AWS/EMR/emr_install/{0} {1}/{0}/emr-install/ --acl aws-exec-read".format(self.emr_version, self.s3_bucket)
         copy_artifacts = "aws s3 cp  --recursive ./AWS/EMR/s3_bucket/{0}/artifacts {1}/{0}/artifacts/ --acl aws-exec-read".format(self.emr_version, self.s3_bucket)
-        for cmd in copy_scripts, copy_artifacts:
+        copy_version_tag = "aws s3 cp ./AWS/EMR/s3_bucket/{0}/artifacts/version.txt {1}/{0}/artifacts/ --acl aws-exec-read".format(self.emr_version, self.s3_bucket)
+
+        for cmd in copy_scripts, copy_artifacts, copy_version_tag:
             try:
                 self.log.info(cmd)
                 os.system(cmd)
