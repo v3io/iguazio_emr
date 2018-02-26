@@ -64,12 +64,12 @@ pipeline {
             }
             steps{
                 withEnv(['VENV=./venv', 'EMR=emr/AWS/EMR/emr_install/emr-5.6.0']) {
-                   git branch: '${naipi_branch}',  url: 'git@github.com:${naipi_user}/naipi.git'
-                    dir('naipi'){
-                        dir('naipi_configs'){
-                            deleteDir()
-                            unstash 'the_config_file' 
-                        }
+                  dir('naipi'){
+                     git branch: '${naipi_branch}',  url: 'git@github.com:${naipi_user}/naipi.git'
+                     dir('naipi_configs'){
+                         deleteDir()
+                         unstash 'the_config_file' 
+                     }
                         ansiColor('xterm') {
                             sh '''rm -rf ${VENV}
                             virtualenv ${VENV}
