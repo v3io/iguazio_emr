@@ -214,8 +214,10 @@ function presto_installation()
   v3io_properties="/tmp/v3io.properties"
   logger -T "[INFO]: presto installation"
   sudo mkdir -p /usr/lib/presto/plugin/v3io
+  sudo mkdir -p /usr/lib/presto/plugin/hive-hadoop2
   sudo mv /opt/igz/spark/lib/v3io-presto_2.11-1.5.0.jar /usr/lib/presto/plugin/v3io/
   sudo ln -s  /opt/igz/spark/lib/*.jar /usr/lib/presto/plugin/v3io/
+  sudo ln -s  /opt/igz/spark/lib/*.jar /usr/lib/presto/plugin/hive-hadoop2/
   sudo mkdir -p /etc/presto/conf/catalog
   sudo echo "connector.name=v3io" > $v3io_properties
   sudo chown presto:presto -R /usr/lib/presto/plugin/v3io
