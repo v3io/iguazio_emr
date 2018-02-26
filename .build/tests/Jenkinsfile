@@ -7,12 +7,12 @@ pipeline {
         booleanParam(name: 'depoly_node', defaultValue: true, description: 'should depoly into the node and the client.\nwill delte all the data in the node.')
         booleanParam(name: 'upload_igz_to_S3', defaultValue: true, description: 'upload the new tag to S3 for EMR use.\nif false will use the last tag that was pushed.')
         booleanParam(name: 'run_naipi', defaultValue: true, description: 'if false will not run naipi,')
-        string(name: 'naipi_user', defaultValue: 'iguazio', description: 'the user ')
-        string(name: 'naipi_branch', defaultValue: '1.5.2', description: '')
-        string(name: 'naipi_parameters', defaultValue: '--cycle-definition=IG-5757', description: '')
-        string(name: 'naipi_config_file', defaultValue: 'setup_EMR_naipi_integration.json', description: '')
-        string(name: 'kompton_branch', defaultValue: 'integ_v1.5', description: '')
-        string(name: 'emr_branch', defaultValue: '1.5.2', description: '')
+        string(name: 'naipi_user', defaultValue: 'iguazio', description: 'the github user for naipi')
+        string(name: 'naipi_branch', defaultValue: '1.5.2', description: 'the naipi branch in github')
+        string(name: 'naipi_parameters', defaultValue: '--cycle-definition=IG-5757', description: 'parameters for naipi')
+        string(name: 'naipi_config_file', defaultValue: 'setup_EMR_naipi_integration.json', description: 'the setup file to use')
+        string(name: 'kompton_branch', defaultValue: 'integ_v1.5', description: 'the kompton branch in github')
+        string(name: 'emr_branch', defaultValue: '1.5.2', description: 'the emr branch in github')
 
 
     }
