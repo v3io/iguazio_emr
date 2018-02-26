@@ -3,7 +3,7 @@ pipeline {
    { label 'evgeny66' }
 
     parameters {
-        string(name: 'tag', defaultValue: 'new-iso_stable_offline', description: 'the build tag')
+        string(name: 'tag', defaultValue: '1.5.x_stable_offline', description: 'the build tag')
         booleanParam(name: 'depoly_node', defaultValue: true, description: 'should depoly into the node and the client.\nwill delte all the data in the node.')
         booleanParam(name: 'upload_igz_to_S3', defaultValue: true, description: 'upload the new tag to S3 for EMR use.\nif false will use the last tag that was pushed.')
         booleanParam(name: 'run_naipi', defaultValue: true, description: 'if false will not run naipi,')
