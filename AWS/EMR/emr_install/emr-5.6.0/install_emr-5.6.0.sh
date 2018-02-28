@@ -135,7 +135,7 @@ function main() {
         --name "$CLUSTER_NAME" \
         --release-label emr-${IGZ_EMR_VERSION} --use-default-roles \
         --ec2-attributes KeyName=$SSH_KEY_PAIR_NAME,SubnetId=$SUBNET_ID \
-        --applications Name=Hadoop Name=Spark Name=Zeppelin Name=Ganglia Name=Presto \
+        --applications Name=Hadoop Name=Spark Name=Zeppelin Name=Ganglia Name=Presto Name=Oozie \
         --instance-count $EC2_INSTANCE_COUNT \
         --instance-type $EC2_INSTANCE_TYPE \
         --bootstrap-action \
@@ -148,7 +148,7 @@ function main() {
           --name "$CLUSTER_NAME" \
           --release-label emr-${IGZ_EMR_VERSION} --use-default-roles \
           --ec2-attributes KeyName=$SSH_KEY_PAIR_NAME,SubnetId=$SUBNET_ID \
-          --applications Name=Hadoop Name=Spark Name=Zeppelin Name=Ganglia Name=Presto \
+          --applications Name=Hadoop Name=Spark Name=Zeppelin Name=Ganglia Name=Presto Name=Oozie \
           --instance-count $EC2_INSTANCE_COUNT \
           --instance-type $EC2_INSTANCE_TYPE \
           --bootstrap-action \
