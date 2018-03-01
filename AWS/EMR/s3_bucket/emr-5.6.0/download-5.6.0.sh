@@ -156,13 +156,19 @@ EOF
   },
   "cluster": {
      "uris": [
-      {"uri": "tcp://$igz_data_node_ip:1234"}
-     ]
-  }
-}
-
-
 EOF
+
+  arr=[]
+  count_id=0
+  for i in `echo $igz_data_node_ip| tr ',' ' '`;do  
+      echo "{\"uri\": \"tcp://$i:1234\"}," >> /tmp/nodes.tmp 
+      ((count_id++))
+  done
+
+  cat /tmp/nodes.tmp |  sed '$ s/.$//' >> /tmp/dayman_config.json
+  echo "     ]" >> /tmp/dayman_config.json
+  echo "  }" >> /tmp/dayman_config.json
+  echo "}" >> /tmp/dayman_config.json
 
   sudo mkdir -p /home/iguazio/igz/dayman/config
   sudo cp /tmp/dayman_config.json /home/iguazio/igz/dayman/config
