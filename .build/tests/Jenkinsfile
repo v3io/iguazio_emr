@@ -33,6 +33,7 @@ pipeline {
             }
             steps{
                 dir('kompton'){
+                    deleteDir() 
                     git branch:'${kompton_branch}',  url:'git@github.com:iguazio/kompton.git'
                     dir('smoke'){
                         deleteDir()
@@ -51,6 +52,7 @@ pipeline {
             }
             steps{
                 dir('emr'){
+                     deleteDir() 
                     git branch: '${emr_branch}',  url: 'git@github.com:iguazio/emr.git'
                     sh '''sudo chmod  -R  777 ./ 
                     ./bin/upload_emr_ver2S3.py --tag ${tag}'''
@@ -65,6 +67,7 @@ pipeline {
             steps{
                 withEnv(['VENV=./venv', 'EMR=emr/AWS/EMR/emr_install/emr-5.6.0']) {
                   dir('naipi'){
+                     deleteDir() 
                      git branch: '${naipi_branch}',  url: 'git@github.com:${naipi_user}/naipi.git'
                      dir('naipi_configs'){
                          deleteDir()
