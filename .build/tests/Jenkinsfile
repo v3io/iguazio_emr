@@ -36,7 +36,6 @@ pipeline {
                     deleteDir() 
                     git branch:'${kompton_branch}',  url:'git@github.com:iguazio/kompton.git'
                     dir('smoke'){
-                        deleteDir()
                         unstash 'the_config_file' 
                     }
                     sh '''./download_version.sh ${tag}
