@@ -32,12 +32,12 @@ pipeline {
                 environment name: 'depoly_node', value: 'true'
             }
             steps{
-                dir('kompton'){    
+                dir('kompton'){
+                    git branch:'${kompton_branch}',  url:'git@github.com:iguazio/kompton.git'
                     dir('smoke'){
                         deleteDir()
                         unstash 'the_config_file' 
                     }
-                    git branch:'${kompton_branch}',  url:'git@github.com:iguazio/kompton.git'
                     sh '''./download_version.sh ${tag}
                     python smoke/prepare.py -naipiconfig=${naipi_config_file} -tagName=${tag} -naipi_user=${naipi_user} -naipi_branch=${naipi_branch} -kompton_dir=./
                     sh ./smoke/run_ansible.sh "naipi_config=${naipi_config_file} kompton_dir=$(pwd)"'''
