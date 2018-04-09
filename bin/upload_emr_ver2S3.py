@@ -17,7 +17,7 @@ def main():
     parser.add_argument("-f", "--config-file", dest="config_file", help="config file ",
                          default='./bin/upload_emr_ver2S3.json')
     args = parser.parse_args()
-
+    hack_environment_variable()
     if args.myTag:
         print("Current tag {}".format(args.myTag))
         action = EMRuploader(args.myTag, args.config_file)
@@ -29,6 +29,23 @@ def main():
         """)
         sys.exit(1)
 
+def hack_environment_variable():
+    """
+    this hack read Jenkins environment variable,
+    and change there name so AWS cli can use them
+    """
+    try:
+        os.environ['AWS_ACCESS_KEY_ID'] = os.environ['aws_access_key']
+    except KeyError as ex:
+        print('can read aws_access_key Exception {}'.format(ex))
+
+    try:
+        os.environ['AWS_SECRET_ACCESS_KEY'] = os.environ['aws_secret_key']
+    except KeyError as ex:
+        print('can read aws_secret_key Exception {}'.format(ex))
+
+    os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
+    
 
 class EMRuploader:
     """
