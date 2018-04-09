@@ -45,7 +45,7 @@ def hack_environment_variable():
         print('can read aws_secret_key Exception {}'.format(ex))
 
     os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
-    
+    print os.environ
 
 class EMRuploader:
     """
