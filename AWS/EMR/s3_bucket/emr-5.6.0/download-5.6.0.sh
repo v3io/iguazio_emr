@@ -222,6 +222,14 @@ function presto_installation()
   sudo mv $v3io_properties  /etc/presto/conf/catalog/v3io.properties
 }
 
+function cahnge_tenat()
+{
+  echo "going to change tenant $tenant_name and container  $container_name"
+  aws s3 cp $s3_bucket_dir/configure_tenant.py /tmp/configure_tenant.py
+  sudo chmod 0777 /tmp/configure_tenant.py
+  sudo /tmp/configure_tenant.py -container $container_name -tenant $tenant_name
+  sudo rm /tmp/configure_tenant.py
+}
 
 function main()
 {
@@ -240,6 +248,17 @@ function main()
         exit
     fi
 
+    local container_name=$3
+    if [ -z $container_name ]; then
+        logger -T "[ERROR]: The default container name (\$3) is missing."
+        exit
+    fi
+
+      local tenant_name=$4
+    if [ -z $tenant_name ]; then
+        logger -T "[ERROR]: The tenant name (\$4) is missing."
+        exit
+    fi
     copy_artifacts
     create_user_iguazio
     install_daemon_config
@@ -248,6 +267,7 @@ function main()
     sysctl_update
     change_ulimit
     presto_installation
+    cahnge_tenat
  
     # Copy post-installation artifacts and change permissions
     sudo chmod 755 /opt/igz/spark/lib/*.sh

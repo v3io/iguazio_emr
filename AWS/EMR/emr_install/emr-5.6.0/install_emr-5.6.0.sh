@@ -123,6 +123,8 @@ function main() {
     echo "[INFO]: EC2_INSTANCE_COUNT = ${EC2_INSTANCE_COUNT:? NOT DEFINED}"
     echo "[INFO]: EC2_INSTANCE_TYPE  = ${EC2_INSTANCE_TYPE:? NOT DEFINED}"
     echo "[INFO]: CONFIG_FILE        = ${CONFIG_FILE:? NOT DEFINED}"
+    echo "[INFO]: BIG_DATA_CONTINER  = ${BIG_DATA_CONTINER:? NOT DEFINED}"
+    echo "[INFO]: TENANT             = ${TENANT:? NOT DEFINED}"
     echo "[INFO]: DEBUG              = ${DEBUG:? NOT DEFINED}"
 
     # Set path to the S3-bucket installation directory
@@ -138,8 +140,8 @@ function main() {
         --applications Name=Hadoop Name=Spark Name=Zeppelin Name=Ganglia Name=Presto \
         --instance-count $EC2_INSTANCE_COUNT \
         --instance-type $EC2_INSTANCE_TYPE \
-        --bootstrap-action \
-        Path="$S3_BUCKET_DIR/download-${IGZ_EMR_VERSION}.sh",Args=[$IGZ_DATA_NODE_IP,$S3_BUCKET_DIR]  \
+        --bootstrap-actions \
+        Path="$S3_BUCKET_DIR/download-${IGZ_EMR_VERSION}.sh",Args=[$IGZ_DATA_NODE_IP,$S3_BUCKET_DIR,$BIG_DATA_CONTINER,$TENANT] \
         --configurations file://$PWD/$CONFIG_FILE \
         --tags application=$CLUSTER_NAME | awk '/ClusterId/ { print $2 }' | sed 's/[\",]//g'`
     else
@@ -151,8 +153,9 @@ function main() {
           --applications Name=Hadoop Name=Spark Name=Zeppelin Name=Ganglia Name=Presto \
           --instance-count $EC2_INSTANCE_COUNT \
           --instance-type $EC2_INSTANCE_TYPE \
-          --bootstrap-action \
-          Path="$S3_BUCKET_DIR/download-${IGZ_EMR_VERSION}.sh",Args=[$IGZ_DATA_NODE_IP,$S3_BUCKET_DIR] --log-uri s3://${S3_BUCKET_LOG_NAME}/log \
+          --bootstrap-actions \
+          Path="$S3_BUCKET_DIR/download-${IGZ_EMR_VERSION}.sh",Args=[$IGZ_DATA_NODE_IP,$S3_BUCKET_DIR,$BIG_DATA_CONTINER,$TENANT] \
+          --log-uri s3://${S3_BUCKET_LOG_NAME}/log \
           --configurations file://$PWD/$CONFIG_FILE \
           --tags application=$CLUSTER_NAME  | awk '/ClusterId/ { print $2 }' | sed 's/[\",]//g' `
     fi
