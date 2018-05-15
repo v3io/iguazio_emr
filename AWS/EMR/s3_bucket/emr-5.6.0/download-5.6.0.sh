@@ -231,15 +231,6 @@ function presto_installation()
   sudo mv $v3io_properties  /etc/presto/conf/catalog/v3io.properties
 }
 
-function log_config()
-{
-	cat /etc/hadoop/conf/log4j.properties > /tmp/1
-	echo "log4j.logger.vendor.akka.event.slf_4j.Slf4jLogger=WARN" >> /tmp/1 
-	sudo mv /tmp/1 /etc/hadoop/conf/log4j.properties
-        sudo chown root:root  /etc/hadoop/conf/log4j.properties
-	sudo chmod 655 /etc/hadoop/conf/log4j.properties
-
-}
 
 function main()
 {
@@ -266,7 +257,6 @@ function main()
     sysctl_update
     change_ulimit
     presto_installation
-    log_config
 
     # Copy post-installation artifacts and change permissions
     sudo chmod 755 /opt/igz/spark/lib/*.sh
