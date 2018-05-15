@@ -62,7 +62,7 @@
         "Properties": {
           "LD_LIBRARY_PATH": "${LD_LIBRARY_PATH}:/opt/igz/spark/lib",
           "CLASSPATH": "$CLASSPATH:/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/scala-library-2.11.8.jar",
-                        "HADOOP_CLASSPATH": "$HADOOP_CLASSPATH:/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/scala-library-2.11.8.jar"
+          "HADOOP_CLASSPATH": "$HADOOP_CLASSPATH:/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/scala-library-2.11.8.jar"
         },
         "Configurations": [
  
@@ -123,7 +123,15 @@
     }
   },
   {
-    "Classification": "hadoop-log4j",
-    "Properties": {"log4j.logger.vendor.akka.event.slf_4j.Slf4jLogger": "WARN"}
+    "Classification": "hive-site",
+    "Properties": {
+    "javax.jdo.option.ConnectionURL": "jdbc:mysql:\/\/10.0.2.101:3306\/hive?createDatabaseIfNotExist=true",
+    "javax.jdo.option.ConnectionDriverName": "org.mariadb.jdbc.Driver",
+    "javax.jdo.option.ConnectionUserName": "hive",
+    "javax.jdo.option.ConnectionPassword": "jHoLwX64aAkngRRT",
+    "LD_LIBRARY_PATH": "${LD_LIBRARY_PATH}:/opt/igz/spark/lib",
+    "HADOOP_CLASSPATH": "$HADOOP_CLASSPATH:/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/scala-library-2.11.8.jar",
+    "CLASSPATH": "$CLASSPATH:/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/scala-library-2.11.8.jar"
+    }
   }
 ]

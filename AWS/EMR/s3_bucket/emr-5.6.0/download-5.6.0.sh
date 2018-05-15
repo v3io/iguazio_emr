@@ -156,13 +156,19 @@ EOF
   },
   "cluster": {
      "uris": [
-      {"uri": "tcp://$igz_data_node_ip:1234"}
-     ]
-  }
-}
-
-
 EOF
+
+  arr=[]
+  count_id=0
+  for i in `echo $igz_data_node_ip| tr ',' ' '`;do  
+      echo "{\"uri\": \"tcp://$i:1234\"}," >> /tmp/nodes.tmp 
+      ((count_id++))
+  done
+
+  cat /tmp/nodes.tmp |  sed '$ s/.$//' >> /tmp/dayman_config.json
+  echo "     ]" >> /tmp/dayman_config.json
+  echo "  }" >> /tmp/dayman_config.json
+  echo "}" >> /tmp/dayman_config.json
 
   sudo mkdir -p /home/iguazio/igz/dayman/config
   sudo cp /tmp/dayman_config.json /home/iguazio/igz/dayman/config
@@ -214,10 +220,13 @@ function presto_installation()
   v3io_properties="/tmp/v3io.properties"
   logger -T "[INFO]: presto installation"
   sudo mkdir -p /usr/lib/presto/plugin/v3io
+  sudo mkdir -p /usr/lib/presto/plugin/hive-hadoop2
   sudo mv /opt/igz/spark/lib/v3io-presto_2.11-1.5.0.jar /usr/lib/presto/plugin/v3io/
   sudo ln -s  /opt/igz/spark/lib/*.jar /usr/lib/presto/plugin/v3io/
+  sudo ln -s  /opt/igz/spark/lib/*.jar /usr/lib/presto/plugin/hive-hadoop2/
   sudo mkdir -p /etc/presto/conf/catalog
   sudo echo "connector.name=v3io" > $v3io_properties
+  sudo echo "v3io.num.splits.for.path=36" >> $v3io_properties
   sudo chown presto:presto -R /usr/lib/presto/plugin/v3io
   sudo mv $v3io_properties  /etc/presto/conf/catalog/v3io.properties
 }
@@ -248,15 +257,12 @@ function main()
     sysctl_update
     change_ulimit
     presto_installation
- 
+
     # Copy post-installation artifacts and change permissions
     sudo chmod 755 /opt/igz/spark/lib/*.sh
     . /opt/igz/spark/lib/post_install_${IGZ_EMR_VERSION}.sh &
-
     logger -T "Iguazio installation done"
 }
 
 # Execute the script
 main $@
-
-

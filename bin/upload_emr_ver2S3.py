@@ -36,7 +36,6 @@ class EMRuploader:
     """
 
     def __init__(self, tag, config_file):
-        self.version = tag
         self.spark_pkgs_json = config_file
         with open(self.spark_pkgs_json, 'r') as fr:
             self.packages = json.load(fr)
@@ -47,6 +46,7 @@ class EMRuploader:
             self.emr_version = self.packages['emr_version']
         fr.close()
 
+        self.version = self._artifactory_get_latest_success(tag)
         self.log = logging.getLogger(__name__)
         self.out_hdlr = logging.StreamHandler(sys.stdout)
         self.out_hdlr.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
@@ -103,6 +103,12 @@ class EMRuploader:
         except Exception as err:
             self.log.error(err)
             pass
+            
+    def write_current_version_tag(self):
+        filename="./AWS/EMR/s3_bucket/{0}/artifacts/version.txt".format(self.emr_version)
+        with open(filename,'w') as fw:
+            fw.write(self.version)
+            fw.close()
 
     def upload_artifacts_to_s3(self):
         """
@@ -110,16 +116,30 @@ class EMRuploader:
         """
         self._clean_local_artifacts()
         self._download_pkgs()
+        self.write_current_version_tag()
 
         copy_scripts = "aws s3 cp  --recursive ./AWS/EMR/emr_install/{0} {1}/{0}/emr-install/ --acl aws-exec-read".format(self.emr_version, self.s3_bucket)
         copy_artifacts = "aws s3 cp  --recursive ./AWS/EMR/s3_bucket/{0}/artifacts {1}/{0}/artifacts/ --acl aws-exec-read".format(self.emr_version, self.s3_bucket)
-        for cmd in copy_scripts, copy_artifacts:
+        copy_version_tag = "aws s3 cp ./AWS/EMR/s3_bucket/{0}/artifacts/version.txt {1}/{0}/artifacts/ --acl aws-exec-read".format(self.emr_version, self.s3_bucket)
+
+        for cmd in copy_scripts, copy_artifacts, copy_version_tag:
             try:
                 self.log.info(cmd)
                 os.system(cmd)
             except:
                 self.log.error("emr-install scripts upload is failed")
                 sys.exit(1)
+
+    def _artifactory_get_latest_success(self, myTag):
+        """
+        convert the lable to tag
+        """
+        myTag = myTag.strip()
+        if 'latest' in myTag.lower() or 'stable' in myTag.lower():
+            cmd = "aws s3 cp  s3://iguazio-versions/{0}/{0} -".format(myTag)
+            version = os.popen(cmd).read()
+            return version.replace('\n', '')
+        return myTag
 
 if __name__ == '__main__':
     main()
