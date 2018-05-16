@@ -1,0 +1,8 @@
+---
+- hosts: all
+  roles:
+  - emr
+  vars:
+    debug: 1
+  tasks:
+  - include: emr/tasks/run_debug_mode.yml

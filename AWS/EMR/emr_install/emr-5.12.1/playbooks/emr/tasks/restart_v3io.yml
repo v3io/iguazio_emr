@@ -1,0 +1,13 @@
+---
+
+# - name: clean /dev/shm directory
+#   command: /opt/igz/spark/lib/v3io_restart.sh
+# delete following list :
+# daemon_shared_read_5438_1500540349
+# v3io_daemon_stats_names
+# v3io_daemon_stats_values
+# v3io_daemon_stats_metadata
+
+- name: restart v3io daemon
+  command: /opt/igz/spark/lib/v3io_restart.sh
+  ignore_errors: yes

@@ -1,0 +1,6 @@
+---
+- hosts: all
+  roles:
+  - emr
+  tasks:
+  - include: emr/tasks/upload_file.yml
