@@ -3,16 +3,16 @@ pipeline {
    { label 'evgeny66' }
 
     parameters {
-        string(name: 'tag', defaultValue: '1.5.3_stable_offline', description: 'the build tag')
+        string(name: 'tag', defaultValue: '1.7.0_stable_offline', description: 'the build tag')
         booleanParam(name: 'depoly_node', defaultValue: true, description: 'should depoly into the node and the client.\nwill delte all the data in the node.')
         booleanParam(name: 'upload_igz_to_S3', defaultValue: true, description: 'upload the new tag to S3 for EMR use.\nif false will use the last tag that was pushed.')
         booleanParam(name: 'run_naipi', defaultValue: true, description: 'if false will not run naipi,')
         string(name: 'naipi_user', defaultValue: 'iguazio', description: 'the github user for naipi')
-        string(name: 'naipi_branch', defaultValue: '1.5.3', description: 'the naipi branch in github')
+        string(name: 'naipi_branch', defaultValue: 'development', description: 'the naipi branch in github')
         string(name: 'naipi_parameters', defaultValue: '--cycle-definition=IG-5757', description: 'parameters for naipi')
         string(name: 'naipi_config_file', defaultValue: 'setup_EMR_naipi_integration.json', description: 'the setup file to use')
-        string(name: 'kompton_branch', defaultValue: '1.5.3', description: 'the kompton branch in github')
-        string(name: 'emr_branch', defaultValue: '1.5.3', description: 'the emr branch in github')
+        string(name: 'kompton_branch', defaultValue: 'development', description: 'the kompton branch in github')
+        string(name: 'emr_branch', defaultValue: '1.7.0', description: 'the emr branch in github')
 
 
     }
@@ -64,7 +64,7 @@ pipeline {
                 environment name: 'run_naipi', value: 'true'
             }
             steps{
-                withEnv(['VENV=./venv', 'EMR=emr/AWS/EMR/emr_install/emr-5.6.0']) {
+                withEnv(['VENV=./venv', 'EMR=emr/AWS/EMR/emr_install/emr-5.6.0', 'EMR_CONFIG=/AWS/EMR/emr_install/emr-5.6.0/config/naipi_install_emr-5.6.0.cfg']) {
                   dir('naipi'){
                      deleteDir() 
                      git branch: '${naipi_branch}',  url: 'git@github.com:${naipi_user}/naipi.git'
