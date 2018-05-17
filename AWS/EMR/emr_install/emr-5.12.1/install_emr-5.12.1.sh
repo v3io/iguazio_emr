@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IGZ_EMR_VERSION=5.12.1 
+IGZ_EMR_VERSION="5.12.1" 
 
 function help {
     echo "install_emr-${IGZ_EMR_VERSION}.sh: Installs an EMR cluster."
