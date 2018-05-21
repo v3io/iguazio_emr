@@ -80,10 +80,20 @@ function info_bunner()
 
 function show_progress()
 {
-  #show progress and sleep
+  #check cluster status exit when status changing to "Cluster ready"
+  #in other case wait 5 sec and try 
+  #exit from procedure after 10 min in any case  
+
   for i in `seq 1 100`; do
       echo -ne "[INFO]: running            = (${i}%) done\r"
       sleep 5 
+      aws emr describe-cluster --cluster-id `cat /tmp/ClusterId`  > /tmp/status
+      grep "Cluster ready" /tmp/status
+      if [ $? -eq 0 ]; then 
+        echo -ne "[INFO]: running            = 100% done\r"
+        sleep 1
+        break
+      fi 
   done
   echo -ne '\n'
 }
