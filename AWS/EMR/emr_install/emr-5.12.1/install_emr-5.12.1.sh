@@ -102,9 +102,9 @@ function main() {
             echo "[INFO]: Loading custom configuration file $custom_cfg_file ..."
             source $custom_cfg_file
 
-            #generate unique cluster-name
-            tmpStr=$(printf "\\$(printf %o `date +%s`)")
-            export CLUSTER_NAME="${CLUSTER_NAME}_${tmpStr}"
+            # #generate unique cluster-name
+            # tmpStr=$(printf "\\$(printf %o `date +%s`)")
+            # export CLUSTER_NAME="${CLUSTER_NAME}_${tmpStr}"
         else
             echo -e "[ERROR]: Could not find configuration file $custom_cfg_file.\n"
             help
