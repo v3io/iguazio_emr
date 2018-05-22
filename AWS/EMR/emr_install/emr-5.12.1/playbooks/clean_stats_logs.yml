@@ -1,0 +1,7 @@
+---
+- hosts: all
+  roles:
+  - emr
+  vars:
+  tasks:
+  - include: emr/tasks/clean_stats_logs.yml

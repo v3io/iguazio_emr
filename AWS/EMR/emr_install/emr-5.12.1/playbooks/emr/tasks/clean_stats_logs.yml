@@ -1,0 +1,11 @@
+---
+
+- name: clean stats
+  command: rm -rf /dev/shm/v3io_daemon_stats* /dev/shm/daemon_shared_read*
+
+- name: clean logs
+  command: rm -rf /var/log/iguazio/*.log /var/crash/*.*
+
+- name: restart v3io daemon
+  command: /opt/igz/spark/lib/v3io_restart.sh
+  ignore_errors: yes

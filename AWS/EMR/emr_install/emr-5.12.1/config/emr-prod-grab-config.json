@@ -1,0 +1,137 @@
+[
+  {
+    "Classification": "core-site",
+    "Properties": {
+      "hadoop.security.groups.cache.secs": "250",
+      "fs.v3io.impl": "io.iguaz.v3io.hcfs.V3IOFileSystem",
+      "profile-file-system-mode": "false",
+      "profiling-stats-interval-seconds": "30",
+      "fs.AbstractFileSystem.v3io.impl": "io.iguaz.v3io.hcfs.V3IOAbstractFileSystem",
+      "v3io.container.fs.client.factory": "io.iguaz.v3io.container.AsyncFSClientFactory",
+      "daemon-url": "tcp://127.0.0.1:20000",
+      "container-id": "1",
+      "container-alias": "",
+      "msg-pool-size": "3000",
+      "default-message-block-size": "1024",
+      "default-replication-factor": "1",
+      "default-max-files-in-list-dir": "300",
+      "default-data-block-size": "524288",
+      "default-write-block-size": "524288",
+      "write-shared-mem-buff-size-mb": "512",
+      "maximum-write-size-bytes": "2097152",
+      "default-event-pool-timeout-millis": "5000",
+      "prefetch-queue-size": "15",
+      "time-between-break-event-loops-microsec": "1",
+      "break-event-loop-batch": "1",
+      "eagain-retries-num": "5",
+     "use-thread-safe-input-stream": "false",
+      "use-thread-safe-output-stream": "false",
+      "use-system-user": "true",
+      "session-label": "",
+      "session-interface-type": "HCFS",
+      "io.compression.codecs": "",
+      "io.compression.codec.lzo.class": ""
+    }
+  },
+  {
+    "Classification": "spark-env",
+    "Properties": {
+ 
+    },
+    "Configurations": [
+      {
+        "Classification": "export",
+        "Properties": {
+          "LD_LIBRARY_PATH": "${LD_LIBRARY_PATH}:/opt/igz/spark/lib",
+          "HADOOP_CLASSPATH": "$HADOOP_CLASSPATH:/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/v3io-spark-streaming.jar:/opt/igz/spark/lib/v3io-spark-object-dataframe.jar:/opt/igz/spark/lib/scala-library-2.11.8.jar",
+          "CLASSPATH": "$CLASSPATH:/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/v3io-spark-streaming.jar:/opt/igz/spark/lib/v3io-spark-object-dataframe.jar:/opt/igz/spark/lib/scala-library-2.11.8.jar"
+        },
+        "Configurations": [
+ 
+        ]
+      }
+    ]
+  },
+  {
+    "Classification": "hadoop-env",
+    "Properties": {
+    },
+    "Configurations": [
+      {
+        "Classification": "export",
+        "Properties": {
+          "LD_LIBRARY_PATH": "${LD_LIBRARY_PATH}:/opt/igz/spark/lib",
+          "CLASSPATH": "$CLASSPATH:/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/scala-library-2.11.8.jar",
+          "HADOOP_CLASSPATH": "$HADOOP_CLASSPATH:/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/scala-library-2.11.8.jar"
+        },
+        "Configurations": [
+ 
+        ]
+      }
+    ]
+  },
+  {
+    "Classification": "yarn-site",
+    "Properties": {
+      "yarn.nodemanager.linux-container-executor.nonsecure-mode.limit-users":"false",
+      "yarn.nodemanager.linux-container-executor.group":"hadoop",
+      "yarn.nodemanager.container-executor.class":"org.apache.hadoop.yarn.server.nodemanager.LinuxContainerExecutor"
+    }
+  },
+  {
+    "Classification": "yarn-env",
+    "Properties": {
+ 
+    },
+    "Configurations": [
+      {
+        "Classification": "export",
+        "Properties": {
+          "LD_LIBRARY_PATH": "${LD_LIBRARY_PATH}:/opt/igz/spark/lib",
+          "HADOOP_CLASSPATH": "$HADOOP_CLASSPATH:/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/scala-library-2.11.8.jar",
+          "CLASSPATH": "$CLASSPATH:/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/scala-library-2.11.8.jar"
+        },
+        "Configurations": [
+ 
+        ]
+      }
+    ]
+  },
+  {
+    "Classification": "zeppelin-env",
+    "Properties": {
+ 
+    },
+    "Configurations": [
+      {
+        "Classification": "export",
+        "Properties": {
+            "SPARK_SUBMIT_OPTIONS": "\"--conf 'spark.executorEnv.PYTHONPATH=/usr/lib/spark/python/lib/py4j-src.zip:/usr/lib/spark/python/:<CPS>{{PWD}}/pyspark.zip<CPS>{{PWD}}/py4j-src.zip' --conf spark.yarn.isPython=true --jars /opt/igz/spark/lib/v3io-hcfs.jar,/opt/igz/spark/lib/v3io-spark-object-dataframe.jar,/opt/igz/spark/lib/scala-library-2.11.8.jar\""
+        },
+        "Configurations": [
+        ]
+      }
+    ]
+  },
+  {
+  "Classification": "spark-defaults",
+  "Properties": {
+    "spark.driver.extraClassPath": "/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/v3io-spark-object-dataframe.jar:/usr/share/aws/emr/emrfs/lib/emrfs-hadoop-assembly-2.17.0.jar",
+    "spark.executor.extraClassPath": "/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/v3io-spark-object-dataframe.jar:/usr/share/aws/emr/emrfs/lib/emrfs-hadoop-assembly-2.17.0.jar",
+    "spark.dynamicAllocation.enabled":"false",
+    "spark.executor.cores":"2"
+    }
+  },
+  {
+    "Classification": "hive-site",
+    "Properties": {
+    "javax.jdo.option.ConnectionURL": "jdbc:mysql:\/\/10.0.2.101:3306\/hive?createDatabaseIfNotExist=true",
+    "javax.jdo.option.ConnectionDriverName": "org.mariadb.jdbc.Driver",
+    "javax.jdo.option.ConnectionUserName": "hive",
+    "javax.jdo.option.ConnectionPassword": "jHoLwX64aAkngRRT",
+    "LD_LIBRARY_PATH": "${LD_LIBRARY_PATH}:/opt/igz/spark/lib",
+    "HADOOP_CLASSPATH": "$HADOOP_CLASSPATH:/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/scala-library-2.11.8.jar",
+    "CLASSPATH": "$CLASSPATH:/opt/igz/spark/lib/v3io-hcfs.jar:/opt/igz/spark/lib/scala-library-2.11.8.jar"
+    }
+  }
+]
