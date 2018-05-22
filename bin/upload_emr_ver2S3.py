@@ -75,10 +75,12 @@ class EMRuploader:
                 try:
                     self.log.info("curl -u {0} -o {1} {2}".format(self.AUTH, dst_pkg, src_pkg))
                     os.system("curl -u {0} -o {1} {2}".format(self.AUTH, dst_pkg, src_pkg))
+		    # uncomment for debuging - start
                     # if os.system("file {} | grep -i 'ASCII'".format(dst_pkg)) == 0:
                     #     result = os.system("grep 404 {0}".format(dst_pkg))
                     # if result == 0:
                     #     raise('this package is corrupted or not exist in artifactory')
+		    # stop
                 except:
                     self.log.error("{0} file downloading is failed".format(src_pkg))
                     sys.exit(1)
