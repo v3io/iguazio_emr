@@ -121,5 +121,9 @@
     "spark.dynamicAllocation.enabled":"false",
     "spark.executor.cores":"2"
     }
+  },
+  {
+    "Classification": "hadoop-log4j",
+    "Properties": {"log4j.logger.vendor.akka.event.slf_4j.Slf4jLogger": "WARN"}
   }
 ]

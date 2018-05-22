@@ -226,7 +226,7 @@ function presto_installation()
   sudo ln -s  /opt/igz/spark/lib/*.jar /usr/lib/presto/plugin/hive-hadoop2/
   sudo mkdir -p /etc/presto/conf/catalog
   sudo echo "connector.name=v3io" > $v3io_properties
-  sudo echo "v3io.num.splits.for.path=36" > $v3io_properties
+  sudo echo "v3io.num.splits.for.path=36" >> $v3io_properties
   sudo chown presto:presto -R /usr/lib/presto/plugin/v3io
   sudo mv $v3io_properties  /etc/presto/conf/catalog/v3io.properties
 }
@@ -257,15 +257,12 @@ function main()
     sysctl_update
     change_ulimit
     presto_installation
- 
+
     # Copy post-installation artifacts and change permissions
     sudo chmod 755 /opt/igz/spark/lib/*.sh
     . /opt/igz/spark/lib/post_install_${IGZ_EMR_VERSION}.sh &
-
     logger -T "Iguazio installation done"
 }
 
 # Execute the script
 main $@
-
-
