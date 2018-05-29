@@ -1,0 +1,8 @@
+---
+
+- name: replace v3io log level configuration
+  command: /opt/igz/spark/lib/debug_activate.sh {{ debug }}
+
+- name: restart v3io daemon
+  command: /opt/igz/spark/lib/v3io_restart.sh
+  ignore_errors: yes

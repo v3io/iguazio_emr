@@ -1,0 +1,9 @@
+- name: create directory for debug
+  command: mkdir -p /tmp/debug
+
+- copy:
+    src: '{{file_to_upload}}'
+    dest: '{{file_to_upload}}'
+    owner: iguazio
+    group: iguazio
+    mode: 0755
