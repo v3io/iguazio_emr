@@ -20,7 +20,7 @@ pipeline {
     }
     stage('Run emr cluster') {
       steps {
-        node('evgeny66') {
+        node('emr68') {
           echo 'Running EMR cluster tests..'
           echo 'checking if docker exists'
           sh 'docker -v || exit 1'
@@ -36,7 +36,7 @@ pipeline {
 
       stage('Clean environment') {
         steps {
-          node('evgeny66') {
+          node('emr68') {
             deleteDir()
             sh 'ls -lah'
             sh 'env'
