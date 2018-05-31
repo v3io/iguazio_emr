@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IGZ_EMR_VERSION=5.6.0
+IGZ_EMR_VERSION="5.12.1" 
 
 function help {
     echo "install_emr-${IGZ_EMR_VERSION}.sh: Installs an EMR cluster."
@@ -80,10 +80,20 @@ function info_bunner()
 
 function show_progress()
 {
-  #show progress and sleep
+  #check cluster status exit when status changing to "Cluster ready"
+  #in other case wait 5 sec and try 
+  #exit from procedure after 10 min in any case  
+
   for i in `seq 1 100`; do
       echo -ne "[INFO]: running            = (${i}%) done\r"
       sleep 5 
+      aws emr describe-cluster --cluster-id `cat /tmp/ClusterId`  > /tmp/status
+      grep "Cluster ready" /tmp/status
+      if [ $? -eq 0 ]; then 
+        echo -ne "[INFO]: running            = 100% done\r"
+        sleep 1
+        break
+      fi 
   done
   echo -ne '\n'
 }
@@ -101,6 +111,10 @@ function main() {
             custom_cfg_file=$1
             echo "[INFO]: Loading custom configuration file $custom_cfg_file ..."
             source $custom_cfg_file
+
+            # #generate unique cluster-name
+            # tmpStr=$(printf "\\$(printf %o `date +%s`)")
+            # export CLUSTER_NAME="${CLUSTER_NAME}_${tmpStr}"
         else
             echo -e "[ERROR]: Could not find configuration file $custom_cfg_file.\n"
             help
@@ -119,8 +133,6 @@ function main() {
     echo "[INFO]: EC2_INSTANCE_COUNT = ${EC2_INSTANCE_COUNT:? NOT DEFINED}"
     echo "[INFO]: EC2_INSTANCE_TYPE  = ${EC2_INSTANCE_TYPE:? NOT DEFINED}"
     echo "[INFO]: CONFIG_FILE        = ${CONFIG_FILE:? NOT DEFINED}"
-    echo "[INFO]: BIG_DATA_CONTINER  = ${BIG_DATA_CONTINER:? NOT DEFINED}"
-    echo "[INFO]: TENANT             = ${TENANT:? NOT DEFINED}"
     echo "[INFO]: DEBUG              = ${DEBUG:? NOT DEFINED}"
 
     # Set path to the S3-bucket installation directory
@@ -136,8 +148,8 @@ function main() {
         --applications Name=Hadoop Name=Spark Name=Zeppelin Name=Ganglia Name=Presto Name=Oozie \
         --instance-count $EC2_INSTANCE_COUNT \
         --instance-type $EC2_INSTANCE_TYPE \
-        --bootstrap-actions \
-        Path="$S3_BUCKET_DIR/download-${IGZ_EMR_VERSION}.sh",Args=[$IGZ_DATA_NODE_IP,$S3_BUCKET_DIR,$BIG_DATA_CONTINER,$TENANT] \
+        --bootstrap-action \
+        Path="$S3_BUCKET_DIR/download-${IGZ_EMR_VERSION}.sh",Args=[$IGZ_DATA_NODE_IP,$S3_BUCKET_DIR]  \
         --configurations file://$PWD/$CONFIG_FILE \
         --tags application=$CLUSTER_NAME | awk '/ClusterId/ { print $2 }' | sed 's/[\",]//g'`
     else
@@ -149,9 +161,8 @@ function main() {
           --applications Name=Hadoop Name=Spark Name=Zeppelin Name=Ganglia Name=Presto Name=Oozie \
           --instance-count $EC2_INSTANCE_COUNT \
           --instance-type $EC2_INSTANCE_TYPE \
-          --bootstrap-actions \
-          Path="$S3_BUCKET_DIR/download-${IGZ_EMR_VERSION}.sh",Args=[$IGZ_DATA_NODE_IP,$S3_BUCKET_DIR,$BIG_DATA_CONTINER,$TENANT] \
-          --log-uri s3://${S3_BUCKET_LOG_NAME}/log \
+          --bootstrap-action \
+          Path="$S3_BUCKET_DIR/download-${IGZ_EMR_VERSION}.sh",Args=[$IGZ_DATA_NODE_IP,$S3_BUCKET_DIR] --log-uri s3://${S3_BUCKET_LOG_NAME}/log \
           --configurations file://$PWD/$CONFIG_FILE \
           --tags application=$CLUSTER_NAME  | awk '/ClusterId/ { print $2 }' | sed 's/[\",]//g' `
     fi

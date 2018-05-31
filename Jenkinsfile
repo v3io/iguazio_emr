@@ -13,14 +13,14 @@ pipeline {
     stage('Build docker images') {
       steps {
         echo 'Building docker images'
-        node('evgeny66') {
+        node('emr68') {
           git branch: 'develop', credentialsId: '242e5e6c-973f-4dd1-b292-b1c63c84d18e', url: 'git@github.com:iguazio/kubernetes.git'
         }
       }
     }
     stage('Run emr cluster') {
       steps {
-        node('evgeny66') {
+        node('emr68') {
           echo 'Running EMR cluster tests..'
           echo 'checking if docker exists'
           sh 'docker -v || exit 1'
@@ -36,7 +36,7 @@ pipeline {
 
       stage('Clean environment') {
         steps {
-          node('evgeny66') {
+          node('emr68') {
             deleteDir()
             sh 'ls -lah'
             sh 'env'

@@ -1,6 +1,6 @@
 pipeline {
    agent
-   { label 'evgeny66' }
+   { label 'emr68' }
 
     parameters {
         string(name: 'tag', defaultValue: '1.7.0_stable_offline', description: 'the build tag')

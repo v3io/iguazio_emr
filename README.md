@@ -11,3 +11,5 @@ See the "**Creating an AWS EMR Cluster for the iguazio Data Platform**" quick-st
 
   A copy of the HTML documentation directory is also found on Dropbox, at **Documentation > External_Docs > Latest_Release_Docs > Getting_Started > [igz_qsg_aws_emr_setup.html](https://www.dropbox.com/home/Documentation/External_Docs/Latest_Release_Docs/Getting_Started/igz_qsg_aws_emr_setup.html)** (main file: [**igz_qsg_aws_emr_setup.html**](https://www.dropbox.com/home/Documentation/External_Docs/Latest_Release_Docs/Getting_Started/igz_qsg_aws_emr_setup.html?preview=igz_qsg_aws_emr_setup.html)).
 
+* EMR versions matrix:
+[aws][https://docs.amazonaws.cn/en_us/emr/latest/ReleaseGuide/emr-release-5x.html]

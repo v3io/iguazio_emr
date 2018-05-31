@@ -1,0 +1,12 @@
+---
+
+- name: package log
+  command: /opt/igz/spark/lib/get_logs.sh
+
+- name: create directory for logs
+  command: mkdir -p /tmp/emr/{{ inventory_hostname }}/
+
+- fetch:
+    src: /tmp/logs.v3io.tar.gz
+    dest: /tmp/emr/{{ inventory_hostname }}/logs.v3io.tar.gz
+    flat: yes

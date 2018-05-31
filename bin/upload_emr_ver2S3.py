@@ -15,17 +15,21 @@ def main():
     parser.add_argument("-t", "--tag", dest="myTag", help="""./bin/upload_emr_ver2S3.py \
     --tag igz_1.5.0_b16_20180116095940 \n""")
     parser.add_argument("-f", "--config-file", dest="config_file", help="config file ",
-                         default='./bin/upload_emr_ver2S3.json')
+                         default='./bin/upload_emr_5.12.1_ver2S3.json')
     args = parser.parse_args()
-
     if args.myTag:
-        print("Current tag {}".format(args.myTag))
         action = EMRuploader(args.myTag, args.config_file)
         action.upload_artifacts_to_s3()
     else:
         print ("""
-        example how to run:
-        ./bin/upload_emr_ver2S3.py --tag igz_1.5.0_b16_20180116095940 --config-file ./bin/upload_emr_ver2S3.json
+        how to run:
+        
+        example for upload to env EMR 5.6.0:
+        ./bin/upload_emr_ver2S3.py --tag igz_1.5.0_b16_20180116095940 --config-file ./bin/upload_emr_ver2S3.json    
+        
+        example for upload to env EMR 5.12.1:
+        ./bin/upload_emr_ver2S3.py --tag igz_1.7.0_development_b1372_20180513080600 --config-file ./bin/upload_emr_5.12.1_ver2S3.json
+
         """)
         sys.exit(1)
 
@@ -69,10 +73,12 @@ class EMRuploader:
                 try:
                     self.log.info("curl -u {0} -o {1} {2}".format(self.AUTH, dst_pkg, src_pkg))
                     os.system("curl -u {0} -o {1} {2}".format(self.AUTH, dst_pkg, src_pkg))
-		    if os.system("file {} | grep -i 'ASCII'".format(dst_pkg)) == 0:
-                    	result = os.system("grep 404 {0}".format(dst_pkg))
-		    	if result == 0:
-				raise('this package is corrupted or not exist in artifactory')
+		    # uncomment for debuging - start
+                    # if os.system("file {} | grep -i 'ASCII'".format(dst_pkg)) == 0:
+                    #     result = os.system("grep 404 {0}".format(dst_pkg))
+                    # if result == 0:
+                    #     raise('this package is corrupted or not exist in artifactory')
+		    # stop
                 except:
                     self.log.error("{0} file downloading is failed".format(src_pkg))
                     sys.exit(1)
