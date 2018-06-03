@@ -54,7 +54,7 @@ pipeline {
                      deleteDir() 
                     git branch: '${emr_branch}',  url: 'git@github.com:iguazio/emr.git'
                     sh '''sudo chmod  -R  777 ./ 
-                    ./bin/upload_emr_ver2S3.py --tag ${tag}'''
+                    ./bin/upload_emr_ver2S3.py --tag ${tag} --config-file ./bin/upload_emr_ver2S3.json'''
                 }
             }
         }
