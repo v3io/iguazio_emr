@@ -1,6 +1,10 @@
 pipeline {
    agent
    { label 'emr68' }
+   
+  environment {
+     PATH="${PATH}:/home/iguazio/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/home/iguazio/iguazio/install/ziggy"
+   }
 
     parameters {
         string(name: 'tag', defaultValue: '1.7.0_stable_offline', description: 'the build tag')

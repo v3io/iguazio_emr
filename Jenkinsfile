@@ -1,8 +1,9 @@
 pipeline {
    agent any
    environment {
-    PATH = '/bin:/usr/bin'
+    PATH="${PATH}:/home/iguazio/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/home/iguazio/iguazio/install/ziggy"
    }
+
    parameters {
     string( defaultValue: "latest", description: 'tag version: igz_0.12.6_b36_20170703185723', name: 'buildTag')
     string( defaultValue: "develop", description: 'kubernetes branch name', name: 'KubernetesBranchName')

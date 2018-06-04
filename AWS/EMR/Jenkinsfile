@@ -1,7 +1,7 @@
 pipeline {
    agent any
    environment {
-     PATH='/home/iguazio/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/home/iguazio/iguazio/install/ziggy'
+     PATH="${PATH}:/home/iguazio/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/home/iguazio/iguazio/install/ziggy"
    }
 
    stages {
@@ -9,7 +9,7 @@ pipeline {
        stage('Upload artifacts to AWS') {
               steps {
                echo 'Get sources'
-               node('evgeny66') {
+               node('emr68') {
                   git branch: 'develop', credentialsId: '242e5e6c-973f-4dd1-b292-b1c63c84d18e', url: 'git@github.com:iguazio/kubernetes.git'
                   sh 'echo $PWD'
                   echo 'checking if docker exists'
