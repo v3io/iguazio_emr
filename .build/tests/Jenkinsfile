@@ -87,7 +87,7 @@ pipeline {
                     dir('emr'){
                         git branch: '${emr_branch}',  url: 'git@github.com:iguazio/emr.git'
                         sh '''sudo chmod  -R  777 ./
-                       // ./AWS/EMR/emr_install/emr-5.6.0/terminate-emr-cluster.sh'''
+                        ./AWS/EMR/emr_install/emr-5.6.0/terminate-emr-cluster.sh'''
                     }
                 }
             }
