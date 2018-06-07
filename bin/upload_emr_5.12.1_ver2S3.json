@@ -95,8 +95,8 @@
       "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.12.1/artifacts/emr_streaming.tar"
     },
     {
-      "src_pkg":"ARTIFACTORY/iguazio-devops/EMR/spark2-apps-v12.6.jar",
-      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.12.1/artifacts/spark2-apps-v12.6.jar"
+      "src_pkg":"ARTIFACTORY/iguazio_naipi/spark2-apps/spark2-apps.jar",
+      "dst_pkg":"./AWS/EMR/s3_bucket/emr-5.12.1/artifacts/spark2-apps.jar"
     },
     { 
       "src_pkg":"./AWS/EMR/s3_bucket/emr-5.12.1/download-5.12.1.sh",
