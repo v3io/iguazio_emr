@@ -280,7 +280,8 @@ function main()
  
 
     # Copy post-installation artifacts and change permissions
-    sudo mkdir /home/iguazio/igz/bigdata/libs 
+    sudo mkdir /home/iguazio/igz/bigdata/libs
+    sudo chown -R iguazio:iguazio /home/iguazio/
     sudo chmod 755 /opt/igz/spark/lib/*.sh
     . /opt/igz/spark/lib/post_install_${IGZ_EMR_VERSION}.sh &
     sudo ln -s /opt/igz/spark/lib/* /home/iguazio/igz/bigdata/libs/
