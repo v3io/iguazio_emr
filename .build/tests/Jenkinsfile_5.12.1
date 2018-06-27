@@ -59,7 +59,7 @@ pipeline {
                      deleteDir() 
                     git branch: '${emr_branch}',  url: 'git@github.com:iguazio/emr.git'
                     sh '''sudo chmod  -R  777 ./ 
-                    ./bin/upload_emr_ver2S3.py --tag ${tag} --config-file ./bin/upload_emr_${emr_version}_ver2S3.json'''
+                    ./bin/upload_emr_ver2S3.py --tag ${tag} --config-file ./bin/upload_emr_5.12.1_ver2S3.json'''
                 }
             }
         }
@@ -69,7 +69,7 @@ pipeline {
                 environment name: 'run_naipi', value: 'true'
             }
             steps{
-                withEnv(['VENV=./venv', 'EMR=emr/AWS/EMR/emr_install/emr-${emr_version}', 'EMR_CONFIG=/AWS/EMR/emr_install/emr-${emr_version}/config/naipi_install_emr-${emr_version}.cfg']) {
+                withEnv(['VENV=./venv', 'EMR=emr/AWS/EMR/emr_install/emr-5.12.1', 'EMR_CONFIG=/AWS/EMR/emr_install/emr-5.12.1/config/naipi_install_emr-5.12.1.cfg']) {
                   dir('naipi'){
                      deleteDir() 
                      git branch: '${naipi_branch}',  url: 'git@github.com:${naipi_user}/naipi.git'
