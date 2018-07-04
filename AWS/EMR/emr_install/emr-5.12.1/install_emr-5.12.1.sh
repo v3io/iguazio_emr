@@ -149,7 +149,7 @@ function main() {
         --instance-count $EC2_INSTANCE_COUNT \
         --instance-type $EC2_INSTANCE_TYPE \
         --bootstrap-action \
-        Path="$S3_BUCKET_DIR/download-${IGZ_EMR_VERSION}.sh",Args=[$IGZ_DATA_NODE_IP,$S3_BUCKET_DIR]  \
+        Path="$S3_BUCKET_DIR/download-${IGZ_EMR_VERSION}.sh",Args=[$IGZ_DATA_NODE_IP,$S3_BUCKET_DIR,$BIG_DATA_CONTINER,$TENANT]  \
         --configurations file://$PWD/$CONFIG_FILE \
         --tags application=$CLUSTER_NAME | awk '/ClusterId/ { print $2 }' | sed 's/[\",]//g'`
     else
@@ -162,7 +162,8 @@ function main() {
           --instance-count $EC2_INSTANCE_COUNT \
           --instance-type $EC2_INSTANCE_TYPE \
           --bootstrap-action \
-          Path="$S3_BUCKET_DIR/download-${IGZ_EMR_VERSION}.sh",Args=[$IGZ_DATA_NODE_IP,$S3_BUCKET_DIR] --log-uri s3://${S3_BUCKET_LOG_NAME}/log \
+          Path="$S3_BUCKET_DIR/download-${IGZ_EMR_VERSION}.sh",Args=[$IGZ_DATA_NODE_IP,$S3_BUCKET_DIR,$BIG_DATA_CONTINER,$TENANT] \
+          --log-uri s3://${S3_BUCKET_LOG_NAME}/log \
           --configurations file://$PWD/$CONFIG_FILE \
           --tags application=$CLUSTER_NAME  | awk '/ClusterId/ { print $2 }' | sed 's/[\",]//g' `
     fi
