@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 IGZ_EMR_VERSION=5.12.1
