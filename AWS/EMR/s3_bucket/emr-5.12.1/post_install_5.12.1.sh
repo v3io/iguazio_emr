@@ -20,8 +20,9 @@ function add_nginx()
 #
 
 i=1
+#TODO: set timeout with error! if version changes the script will run indefinitely 
 while [ $i -ne 0 ]; do
-	sudo cat /var/log/messages | grep "Installed: spark-R-2.1.1-1.amzn1.noarch"
+	sudo cat /var/log/messages | grep "Installed: spark-R-2.2.1-1.amzn1.noarch"
 	i=$?
 	sleep 5
 done
