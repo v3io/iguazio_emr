@@ -95,6 +95,7 @@ EOF
 {
   "num_workers": 2,
   "max_channel_inactivity_period_seconds": 180,
+  "shmem_posix_permission": "0660",
   "max_inflight_requests": 4096,
   "cdi": {
     "listen_addr": "0.0.0.0:1967"
